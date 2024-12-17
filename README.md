@@ -18,13 +18,13 @@ mvn clean package
 ```
 
 Usage
--- Deploy the generated JAR file (druid-social-identity-provider-1.0.3.jar) to your Keycloak server.
--- Configure the Druid Identity Provider in the Keycloak admin console:
---- Go to the Identity Providers section.
---- Add a new provider and select "Druid" from the list.
---- Fill in the required configuration fields such as keyId and teamId.
+- Deploy the generated JAR file (druid-social-identity-provider-1.0.3.jar) to your Keycloak server.
+- Configure the Druid Identity Provider in the Keycloak admin console:
+  - Go to the Identity Providers section.
+  - Add a new provider and select "Druid" from the list.
+  - Fill in the required configuration fields such as keyId and teamId.
 
 Configuration
 The configuration for the Druid Identity Provider can be found in the following files:
--- realm-identity-provider-apple-ext.html
--- admin-messages_en.properties
+- realm-identity-provider-apple-ext.html
+- admin-messages_en.properties
