@@ -125,18 +125,6 @@ public class DruidIdentityProvider extends OIDCIdentityProvider implements Socia
         return super.authenticateTokenRequest(tokenRequest);
     }
 
-    // {
-    //     "access_token": "{_your_access_token_}",
-    //     "token_type": "bearer",
-    //     "expires_in": 900,
-    //     "expires_at": 13423423423,
-    //     "refresh_token": "{_your_refresh_token_}",
-    //     "login_status": {
-    //     "uid": 4475,
-    //     "connect_state": "connected"
-    //     }
-    // }
-
     @Override
     protected String getDefaultScopes() {
         return "";
