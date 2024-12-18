@@ -29,12 +29,27 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 public class DruidIdentityProvider extends OIDCIdentityProvider implements SocialIdentityProvider<OIDCIdentityProviderConfig> {
     private String userJson;
-    static final String DRUID_AUTHZ_CODE = "druid-authz-code";
+    public static final String OAUTH2_PARAMETER_CODE = "code";
+
+    private static final Logger logger              = Logger.getLogger(DruidIdentityProvider.class);
+    private static final String AUTH_URL            = "https://auth.test.id.sevillafc.es/oauth2/authorize";
+    private static final String TOKEN_URL           = "https://auth.test.id.sevillafc.es/oauth2/token";
+    private static final String JWKS_URL            = "https://auth.test.id.sevillafc.es/oauth2/keys";
+    private static final String ISSUER              = "https://auth.test.id.sevillafc.es";
+    //
+    private static final String AUTH_URL_TEST       = "https://auth.test.id.sevillafc.es/oauth2/authorize";
+    private static final String TOKEN_URL_TEST      = "https://auth.test.id.sevillafc.es/oauth2/token";
+    private static final String JWKS_URL_TEST       = "https://auth.test.id.sevillafc.es/oauth2/keys";
+    private static final String ISSUER_TEST         = "https://auth.test.id.sevillafc.es";
+    static final String DRUID_AUTHZ_CODE            = "druid-authz-code";
 
 
     public DruidIdentityProvider(KeycloakSession session, DruidIdentityProviderConfig config) {
         super(session, config);
         String defaultScope = config.getDefaultScope(); 
+        //
+        logger.debugf("defaultScope ", defaultScope);
+        //
         config.setAuthorizationUrl("https://auth.test.id.sevillafc.es/oauth2/authorize");
         config.setTokenUrl("https://auth.test.id.sevillafc.es/oauth2/token");
         
