@@ -2,14 +2,10 @@ package media.hiway.provider;
 
 import jakarta.ws.rs.FormParam;
 import jakarta.ws.rs.POST;
-import jakarta.ws.rs.WebApplicationException;
 import jakarta.ws.rs.core.Response;
 import org.jboss.logging.Logger;
 import org.keycloak.OAuth2Constants;
-import org.keycloak.OAuthErrorException;
-import org.keycloak.broker.provider.BrokeredIdentityContext;
 import org.keycloak.broker.provider.IdentityProvider;
-import org.keycloak.broker.provider.util.IdentityBrokerState;
 import org.keycloak.events.Errors;
 import org.keycloak.events.EventBuilder;
 import org.keycloak.events.EventType;
@@ -17,13 +13,12 @@ import org.keycloak.models.KeycloakSession;
 import org.keycloak.models.RealmModel;
 import org.keycloak.services.ErrorPage;
 import org.keycloak.services.messages.Messages;
-import org.keycloak.sessions.AuthenticationSessionModel;
 
 import static media.hiway.provider.DruidIdentityProvider.OAUTH2_PARAMETER_CODE;
 
-public class DruidIdenityProviderEndpoint {
+public class DruidIdentityProviderEndpoint {
 
-    protected static final Logger logger = Logger.getLogger(DruidIdenityProviderEndpoint.class);
+    protected static final Logger logger = Logger.getLogger(DruidIdentityProviderEndpoint.class);
 
     private static final String OAUTH2_PARAMETER_STATE = "state";
     private static final String OAUTH2_PARAMETER_USER = "user";
@@ -38,7 +33,7 @@ public class DruidIdenityProviderEndpoint {
     protected KeycloakSession session;
 
 
-    public DruidIdenityProviderEndpoint(DruidIdentityProvider druidIdentityProvider, RealmModel realm, IdentityProvider.AuthenticationCallback callback, EventBuilder event, KeycloakSession session) {
+    public DruidIdentityProviderEndpoint(DruidIdentityProvider druidIdentityProvider, RealmModel realm, IdentityProvider.AuthenticationCallback callback, EventBuilder event, KeycloakSession session) {
         this.druidIdentityProvider = druidIdentityProvider;
         this.realm = realm;
         this.callback = callback;
