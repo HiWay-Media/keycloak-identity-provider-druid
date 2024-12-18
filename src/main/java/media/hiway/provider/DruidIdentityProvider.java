@@ -8,11 +8,6 @@ import java.security.spec.InvalidKeySpecException;
 import java.security.spec.PKCS8EncodedKeySpec;
 import java.util.Base64;
 
-//import javax.ws.rs.FormParam;
-//import javax.ws.rs.POST;
-//import javax.ws.rs.core.Response;
-//import javax.ws.rs.core.UriBuilder;
-
 import org.keycloak.broker.oidc.OIDCIdentityProvider;
 import org.keycloak.broker.oidc.OIDCIdentityProviderConfig;
 import org.keycloak.broker.provider.BrokeredIdentityContext;
@@ -49,7 +44,7 @@ public class DruidIdentityProvider extends OIDCIdentityProvider implements Socia
 
     @Override
     public Object callback(RealmModel realm, AuthenticationCallback callback, EventBuilder event) {
-        return new OIDCEndpoint(callback, realm, event, this);
+        return new OIDCEndpoint(callback, realm, event);
     }
 
     @Override
@@ -113,43 +108,22 @@ public class DruidIdentityProvider extends OIDCIdentityProvider implements Socia
 
    /* @Override
     protected UriBuilder createAuthorizationUrl(AuthenticationRequest request) {
-        final UriBuilder uriBuilder = UriBuilder.fromUri(getConfig().getAuthorizationUrl())
-                // .queryParam(OAUTH2_PARAMETER_SCOPE, getConfig().getDefaultScope())
-                .queryParam(OAUTH2_PARAMETER_STATE, request.getState().getEncoded())
-                .queryParam(OAUTH2_PARAMETER_RESPONSE_TYPE, "code")
-                .queryParam(OAUTH2_PARAMETER_CLIENT_ID, getConfig().getClientId())
-                .queryParam(OAUTH2_PARAMETER_REDIRECT_URI, request.getRedirectUri());
+        UriBuilder uriBuilder = super.createAuthorizationUrl(request);
 
-        String loginHint = request.getAuthenticationSession().getClientNote(OIDCLoginProtocol.LOGIN_HINT_PARAM);
-        if (getConfig().isLoginHint() && loginHint != null) {
-            uriBuilder.queryParam(OIDCLoginProtocol.LOGIN_HINT_PARAM, loginHint);
-        }
+        final DruidIdentityProviderConfig config = (DruidIdentityProviderConfig) getConfig();
+        
+        uriBuilder.queryParam(OAUTH2_PARAMETER_STATE, request.getState().getEncoded())
+        .queryParam(OAUTH2_PARAMETER_RESPONSE_TYPE, "code")
+        .queryParam(OAUTH2_PARAMETER_CLIENT_ID, config.getClientId())
+        .queryParam(OAUTH2_PARAMETER_REDIRECT_URI, request.getRedirectUri());
 
-        if (getConfig().isUiLocales()) {
-            uriBuilder.queryParam(OIDCLoginProtocol.UI_LOCALES_PARAM, session.getContext().resolveLocale(null).toLanguageTag());
-        }
+        // final UriBuilder uriBuilder = UriBuilder.fromUri(getConfig().getAuthorizationUrl())
+        //         .queryParam(OAUTH2_PARAMETER_SCOPE, getConfig().getDefaultScope())
+        //         .queryParam(OAUTH2_PARAMETER_STATE, request.getState().getEncoded())
+        //         .queryParam(OAUTH2_PARAMETER_RESPONSE_TYPE, "code")
+        //         .queryParam(OAUTH2_PARAMETER_CLIENT_ID, getConfig().getClientId())
+        //         .queryParam(OAUTH2_PARAMETER_REDIRECT_URI, request.getRedirectUri());
 
-        String prompt = getConfig().getPrompt();
-        if (prompt == null || prompt.isEmpty()) {
-            prompt = request.getAuthenticationSession().getClientNote(OAuth2Constants.PROMPT);
-        }
-        if (prompt != null) {
-            uriBuilder.queryParam(OAuth2Constants.PROMPT, prompt);
-        }
-
-        String acr = request.getAuthenticationSession().getClientNote(OAuth2Constants.ACR_VALUES);
-        if (acr != null) {
-            uriBuilder.queryParam(OAuth2Constants.ACR_VALUES, acr);
-        }
-        String forwardParameterConfig = getConfig().getForwardParameters() != null ? getConfig().getForwardParameters(): "";
-        List<String> forwardParameters = Arrays.asList(forwardParameterConfig.split("\\s*,\\s*"));
-        for(String forwardParameter: forwardParameters) {
-            String name = AuthorizationEndpoint.LOGIN_SESSION_NOTE_ADDITIONAL_REQ_PARAMS_PREFIX + forwardParameter.trim();
-            String parameter = request.getAuthenticationSession().getClientNote(name);
-            if(parameter != null && !parameter.isEmpty()) {
-                uriBuilder.queryParam(forwardParameter, parameter);
-            }
-        }
         return uriBuilder;
     }
 
