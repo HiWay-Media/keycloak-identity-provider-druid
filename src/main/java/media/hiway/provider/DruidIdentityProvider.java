@@ -73,7 +73,7 @@ public class DruidIdentityProvider extends OIDCIdentityProvider implements Socia
     @Override
     public BrokeredIdentityContext getFederatedIdentity(String response) {
         logger.infof("getFederatedIdentity before response: %s", response);
-        BrokeredIdentityContext context = super.getFederatedIdentity(response);
+        BrokeredIdentityContext context = doGetFederatedIdentity(response);
         logger.infof("getFederatedIdentity response: %s and context: %s", response, context);
         return context;
     }
