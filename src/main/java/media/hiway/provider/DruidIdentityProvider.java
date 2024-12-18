@@ -41,9 +41,7 @@ public class DruidIdentityProvider extends OIDCIdentityProvider implements Socia
     // private static final String JWKS_URL_TEST       = "https://auth.test.id.sevillafc.es/oauth2/keys";
     // private static final String ISSUER_TEST         = "https://auth.test.id.sevillafc.es";
     static final String DRUID_AUTHZ_CODE            = "druid-authz-code";
-
     private final DruidIdentityProviderConfig config;
-
 
     public DruidIdentityProvider(KeycloakSession session, DruidIdentityProviderConfig config) {
         super(session, config);
@@ -116,7 +114,7 @@ public class DruidIdentityProvider extends OIDCIdentityProvider implements Socia
         String id = getJsonProperty(profile, "sub");
         logger.infof("extractIdentityFromProfile before id: %s", id);
         try {
-            BrokeredIdentityContext user = new BrokeredIdentityContext(id, this.config);
+            BrokeredIdentityContext user = new BrokeredIdentityContext(id, this.getConfig());
             logger.infof("extractIdentityFromProfile user: %s", user);
             String email = getJsonProperty(profile, "email");
             if (email == null && profile.has("userPrincipalName")) {
