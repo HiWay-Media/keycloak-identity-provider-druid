@@ -36,8 +36,8 @@ public class DruidIdentityProviderFactory extends AbstractIdentityProviderFactor
     public List<ProviderConfigProperty> getConfigProperties() {
         return ProviderConfigurationBuilder.create()
                 .property().name("displayName").label("Display name").helpText("Text that is shown on the login page. Defaults to 'Sign in with Druid'").type(ProviderConfigProperty.STRING_TYPE).add()
-                .property().name("teamId").label("Team ID").helpText("Your 10-character Team ID obtained from your Druid developer account.").type(ProviderConfigProperty.STRING_TYPE).add()
-                .property().name("keyId").label("Key ID").helpText("A 10-character key identifier obtained from your Druid developer account.").type(ProviderConfigProperty.STRING_TYPE).add()
+                //.property().name("teamId").label("Team ID").helpText("Your 10-character Team ID obtained from your Druid developer account.").type(ProviderConfigProperty.STRING_TYPE).add()
+                //.property().name("keyId").label("Key ID").helpText("A 10-character key identifier obtained from your Druid developer account.").type(ProviderConfigProperty.STRING_TYPE).add()
                 .property().name("prodEnv").label("Is Prod").helpText("Is production environment.").type(ProviderConfigProperty.STRING_TYPE).add()
                 .build();
     }
