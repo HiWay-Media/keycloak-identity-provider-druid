@@ -81,8 +81,10 @@ public class DruidIdentityProvider extends OIDCIdentityProvider implements Socia
 
     @Override
     protected BrokeredIdentityContext doGetFederatedIdentity(String accessToken) {
+        logger.infof("doGetFederatedIdentity before accessToken: %s", accessToken);
         try {
             JsonNode profile = SimpleHttp.doGet(PROFILE_URL, session).auth(accessToken).asJson();
+            logger.infof("doGetFederatedIdentity response: %s", profile);
             if (profile.has("error") && !profile.get("error").isNull()) {
                 throw new IdentityBrokerException("Error in Druid Graph API response. Payload: " + profile.toString());
             }
@@ -95,8 +97,9 @@ public class DruidIdentityProvider extends OIDCIdentityProvider implements Socia
     @Override
     protected BrokeredIdentityContext extractIdentityFromProfile(EventBuilder event, JsonNode profile) {
         String id = getJsonProperty(profile, "sub");
+        logger.infof("extractIdentityFromProfile before id: %s", id);
         BrokeredIdentityContext user = new BrokeredIdentityContext(id, getConfig());
-
+        logger.infof("extractIdentityFromProfile user: %s", user);
         String email = getJsonProperty(profile, "email");
         // non saprei
         if (email == null && profile.has("userPrincipalName")) {
@@ -105,7 +108,6 @@ public class DruidIdentityProvider extends OIDCIdentityProvider implements Socia
                 email = username;
             }
         }
-
         user.setUsername(email != null ? email : id);
         user.setFirstName(getJsonProperty(profile, "name"));
         user.setLastName(getJsonProperty(profile, "family_name"));
