@@ -3,7 +3,6 @@ package media.hiway.provider;
 import org.jboss.logging.Logger;
 import org.keycloak.OAuth2Constants;
 import org.keycloak.broker.oidc.AbstractOAuth2IdentityProvider;
-import org.keycloak.broker.oidc.OIDCIdentityProvider;
 import org.keycloak.broker.oidc.OIDCIdentityProviderConfig;
 import org.keycloak.broker.oidc.mappers.AbstractJsonUserAttributeMapper;
 import org.keycloak.broker.provider.AuthenticationRequest;
@@ -165,7 +164,7 @@ public class DruidIdentityProvider extends AbstractOAuth2IdentityProvider<OIDCId
         return uriBuilder;
     }
 
-    protected class OIDCEndpoint extends AbstractOAuth2IdentityProvider.OIDCEndpoint {
+    protected class OIDCEndpoint extends AbstractOAuth2IdentityProvider.Endpoint {
         public OIDCEndpoint(AuthenticationCallback callback, RealmModel realm, EventBuilder event) {
             super(callback, realm, event, DruidIdentityProvider.this);
         }
