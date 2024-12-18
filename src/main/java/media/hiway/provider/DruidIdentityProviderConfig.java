@@ -1,4 +1,4 @@
-package fr.benjaminfavre.provider;
+package media.hiway.provider;
 
 import org.keycloak.broker.oidc.OIDCIdentityProviderConfig;
 import org.keycloak.models.IdentityProviderModel;

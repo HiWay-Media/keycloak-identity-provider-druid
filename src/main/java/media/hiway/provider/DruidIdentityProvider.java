@@ -1,4 +1,4 @@
-package fr.benjaminfavre.provider;
+package media.hiway.provider;
 
 import java.io.IOException;
 import java.security.KeyFactory;
@@ -8,16 +8,13 @@ import java.security.spec.InvalidKeySpecException;
 import java.security.spec.PKCS8EncodedKeySpec;
 import java.util.Base64;
 
-import javax.ws.rs.FormParam;
-import javax.ws.rs.POST;
-import javax.ws.rs.core.Response;
-import javax.ws.rs.core.UriBuilder;
+//import javax.ws.rs.FormParam;
+//import javax.ws.rs.POST;
+//import javax.ws.rs.core.Response;
+//import javax.ws.rs.core.UriBuilder;
 
-import org.keycloak.OAuth2Constants;
-import org.keycloak.broker.oidc.AbstractOAuth2IdentityProvider;
 import org.keycloak.broker.oidc.OIDCIdentityProvider;
 import org.keycloak.broker.oidc.OIDCIdentityProviderConfig;
-import org.keycloak.broker.provider.AuthenticationRequest;
 import org.keycloak.broker.provider.BrokeredIdentityContext;
 import org.keycloak.broker.provider.util.SimpleHttp;
 import org.keycloak.broker.social.SocialIdentityProvider;
@@ -52,7 +49,7 @@ public class DruidIdentityProvider extends OIDCIdentityProvider implements Socia
 
     @Override
     public Object callback(RealmModel realm, AuthenticationCallback callback, EventBuilder event) {
-        return new OIDCEndpoint(callback, realm, event);
+        return new OIDCEndpoint(callback, realm, event, this);
     }
 
     @Override
@@ -114,7 +111,7 @@ public class DruidIdentityProvider extends OIDCIdentityProvider implements Socia
     }
 
 
-    @Override
+   /* @Override
     protected UriBuilder createAuthorizationUrl(AuthenticationRequest request) {
         UriBuilder uriBuilder = super.createAuthorizationUrl(request);
 
@@ -149,7 +146,7 @@ public class DruidIdentityProvider extends OIDCIdentityProvider implements Socia
             DruidIdentityProvider.this.userJson = userJson;
             return super.authResponse(state, authorizationCode, error);
         }
-    }
+    }*/
 
 
 

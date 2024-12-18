@@ -10,14 +10,14 @@
     <version>1.0.3</version>
     <name>Druid Social Identity Provider</name>
     <description>Druid Social Identity Provider for Keycloak</description>
-    <!-- <url>https://github.com/BenjaminFavre/keycloak-apple-social-identity-provider</url> -->
+    <url>https://github.com/HiWay-Media/keycloak-identity-provider-druid</url>
 
-    <!-- <developers>
+    <developers>
         <developer>
-            <name>Benjamin Favre</name>
-            <email>benjamin.favre@gmail.com</email>
+            <name>Hiway Media</name>
+            <email>dev@hiway.media</email>
         </developer>
-    </developers> -->
+    </developers>
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>

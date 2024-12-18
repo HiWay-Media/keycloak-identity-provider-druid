@@ -1,3 +1,8 @@
 druid-social-identity-provider.iml
 target/
 .idea/
+.gradle
+.idea
+build
+.DS_Store
+.java-version
