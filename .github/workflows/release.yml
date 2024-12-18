@@ -39,7 +39,7 @@ jobs:
               sha512sum $jar | awk '{ print $1 }' > "${jar}.sha512"
           done
           cd ..
-      
+      #   
       - name: "Upload artifacts"
         uses: actions/upload-artifact@v4
         env:
@@ -47,6 +47,11 @@ jobs:
         with:
           name: Package
           path: tmp-artifacts
+      #
+      - name: "check file"
+        run: |
+          pwd
+          ls -l
       #
       - name: Release artifacts
         uses: softprops/action-gh-release@v2
