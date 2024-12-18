@@ -18,6 +18,7 @@ import org.keycloak.services.validation.Validation;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 import jakarta.ws.rs.FormParam;
 import jakarta.ws.rs.POST;
@@ -72,8 +73,21 @@ public class DruidIdentityProvider extends OIDCIdentityProvider implements Socia
     @Override
     public BrokeredIdentityContext getFederatedIdentity(String response) {
         logger.infof("getFederatedIdentity before response: %s", response);
-        BrokeredIdentityContext context = doGetFederatedIdentity(response);
+
+        // parse the response string into json
+        ObjectMapper mapper = new ObjectMapper();
+        JsonNode jsonResponse;
+        try {
+            jsonResponse = mapper.readTree(response);
+        } catch (Exception e) {
+            throw new IdentityBrokerException("Could not parse response from Druid", e);
+        }
+        logger.infof("getFederatedIdentity jsonResponse: %s", jsonResponse);
+        logger.infof("getFederatedIdentity jsonResponse.get(\"access_token\"): %s", jsonResponse.get("access_token"));
+
+        BrokeredIdentityContext context = doGetFederatedIdentity(jsonResponse.get("access_token").asText());
         logger.infof("getFederatedIdentity response: %s and context: %s", response, context);
+
         return context;
     }
 
@@ -82,8 +96,9 @@ public class DruidIdentityProvider extends OIDCIdentityProvider implements Socia
     protected BrokeredIdentityContext doGetFederatedIdentity(String accessToken) {
         logger.infof("doGetFederatedIdentity before accessToken: %s", accessToken);
         try {
+            logger.infof("doGetFederatedIdentity before SimpleHttp.doGet", "Authorization Bearer " + accessToken);
             JsonNode profile = SimpleHttp.doGet(PROFILE_URL, session).header("Authorization", "Bearer " + accessToken).asJson();
-            logger.infof("doGetFederatedIdentity response: %s", profile);
+            logger.infof("doGetFederatedIdentity JsonNode profile response: %s", profile);
             if (profile.has("error") && !profile.get("error").isNull()) {
                 throw new IdentityBrokerException("Error in Druid Graph API response. Payload: " + profile.toString());
             }
