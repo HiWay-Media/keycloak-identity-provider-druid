@@ -54,11 +54,14 @@ public class DruidIdentityProvider extends OIDCIdentityProvider implements Socia
 
     public DruidIdentityProvider(KeycloakSession session, DruidIdentityProviderConfig config) {
         super(session, config);
-        String defaultScop
-        //e = config.getDefaultScope();
+        String defaultScope = config.getDefaultScope();
         //
-        config.setAuthorizationUrl("https://auth.test.id.sevillafc.es/oauth2/authorize");
-        config.setTokenUrl("https://auth.test.id.sevillafc.es/oauth2/token");
+        logger.debugf("defaultScope ", defaultScope);
+        String isProd = config.getProd();
+        logger.debugf("isProd ", isProd);
+        //
+        config.setAuthorizationUrl(AUTH_URL_TEST);
+        config.setTokenUrl(TOKEN_URL_TEST);
         
         // check if inside the config exist openid likes scope=openid+email+name, if yes remove it 
         if (defaultScope.contains(SCOPE_OPENID)) {
