@@ -65,8 +65,9 @@ public class DruidIdentityProvider extends OIDCIdentityProvider implements Socia
 
     @Override
     public BrokeredIdentityContext getFederatedIdentity(String response) {
+        logger.infof("getFederatedIdentity before response: %s", response);
         BrokeredIdentityContext context = super.getFederatedIdentity(response);
-        logger.infof("getFederatedIdentity response: %s", response);
+        logger.infof("getFederatedIdentity response: %s and context: %s", response, context);
         if (userJson != null) {
             logger.infof("getFederatedIdentity userJson: %s", userJson);
             try {
@@ -125,6 +126,7 @@ public class DruidIdentityProvider extends OIDCIdentityProvider implements Socia
         }
 
         @POST
+        @Override
         public Response authResponse(
                 @FormParam(AbstractOAuth2IdentityProvider.OAUTH2_PARAMETER_STATE) String state,
                 @FormParam(AbstractOAuth2IdentityProvider.OAUTH2_PARAMETER_CODE) String authorizationCode,
