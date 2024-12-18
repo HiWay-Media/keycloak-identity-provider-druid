@@ -112,24 +112,29 @@ public class DruidIdentityProvider extends OIDCIdentityProvider implements Socia
     protected BrokeredIdentityContext extractIdentityFromProfile(EventBuilder event, JsonNode profile) {
         String id = getJsonProperty(profile, "sub");
         logger.infof("extractIdentityFromProfile before id: %s", id);
-        BrokeredIdentityContext user = new BrokeredIdentityContext(id, getConfig());
-        logger.infof("extractIdentityFromProfile user: %s", user);
-        String email = getJsonProperty(profile, "email");
-        if (email == null && profile.has("userPrincipalName")) {
-            String username = getJsonProperty(profile, "userPrincipalName");
-            if (Validation.isEmailValid(username)) {
-                email = username;
+        try {
+            final DruidIdentityProviderConfig config = (DruidIdentityProviderConfig) getConfig();
+            BrokeredIdentityContext user = new BrokeredIdentityContext(id, config);
+            logger.infof("extractIdentityFromProfile user: %s", user);
+            String email = getJsonProperty(profile, "email");
+            if (email == null && profile.has("userPrincipalName")) {
+                String username = getJsonProperty(profile, "userPrincipalName");
+                if (Validation.isEmailValid(username)) {
+                    email = username;
+                }
             }
-        }
-        user.setUsername(email != null ? email : id);
-        user.setFirstName(getJsonProperty(profile, "name"));
-        user.setLastName(getJsonProperty(profile, "family_name"));
-        if (email != null)
-            user.setEmail(email);
-        user.setIdp(this);
+            user.setUsername(email != null ? email : id);
+            user.setFirstName(getJsonProperty(profile, "name"));
+            user.setLastName(getJsonProperty(profile, "family_name"));
+            if (email != null)
+                user.setEmail(email);
+            user.setIdp(this);
 
-        AbstractJsonUserAttributeMapper.storeUserProfileForMapper(user, profile, getConfig().getAlias());
-        return user;
+            AbstractJsonUserAttributeMapper.storeUserProfileForMapper(user, profile, config.getAlias());
+            return user;
+        } catch (Exception e) {
+            throw new IdentityBrokerException("Could not obtain user profile from Druid Graph", e);
+        }
     }
 
     @Override
