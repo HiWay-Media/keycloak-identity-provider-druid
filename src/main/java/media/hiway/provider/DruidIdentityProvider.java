@@ -165,13 +165,12 @@ public class DruidIdentityProvider extends AbstractOAuth2IdentityProvider<OIDCId
         return uriBuilder;
     }
 
-    protected class OIDCEndpoint extends OIDCIdentityProvider.OIDCEndpoint {
+    protected class OIDCEndpoint extends AbstractOAuth2IdentityProvider.OIDCEndpoint {
         public OIDCEndpoint(AuthenticationCallback callback, RealmModel realm, EventBuilder event) {
             super(callback, realm, event, DruidIdentityProvider.this);
         }
 
         @POST
-        @Override
         public Response authResponse(
                 @FormParam(AbstractOAuth2IdentityProvider.OAUTH2_PARAMETER_STATE) String state,
                 @FormParam(AbstractOAuth2IdentityProvider.OAUTH2_PARAMETER_CODE) String authorizationCode,
