@@ -23,13 +23,13 @@ class DruidIdentityProviderConfig extends OIDCIdentityProviderConfig {
     }
 
 
-    public String getKeyId() {
+    /*public String getKeyId() {
         return getConfig().get("keyId");
     }
 
     public String getTeamId() {
         return getConfig().get("teamId");
-    }
+    }*/
 
     @Override
     public void setDisplayName(String displayName) {
