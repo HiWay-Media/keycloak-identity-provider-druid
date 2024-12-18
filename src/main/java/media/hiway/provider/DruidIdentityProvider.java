@@ -50,6 +50,7 @@ public class DruidIdentityProvider extends OIDCIdentityProvider implements Socia
         //
         config.setAuthorizationUrl(AUTH_URL_TEST);
         config.setTokenUrl(TOKEN_URL_TEST);
+        config.setUserInfoUrl(PROFILE_URL);
         
         // check if inside the config exist openid likes scope=openid+email+name, if yes remove it 
         if (defaultScope.contains(SCOPE_OPENID)) {
@@ -99,7 +100,6 @@ public class DruidIdentityProvider extends OIDCIdentityProvider implements Socia
         BrokeredIdentityContext user = new BrokeredIdentityContext(id, getConfig());
         logger.infof("extractIdentityFromProfile user: %s", user);
         String email = getJsonProperty(profile, "email");
-        // non saprei
         if (email == null && profile.has("userPrincipalName")) {
             String username = getJsonProperty(profile, "userPrincipalName");
             if (Validation.isEmailValid(username)) {
