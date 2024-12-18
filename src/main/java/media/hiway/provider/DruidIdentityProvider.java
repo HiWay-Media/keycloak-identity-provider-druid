@@ -93,7 +93,7 @@ public class DruidIdentityProvider extends OIDCIdentityProvider implements Socia
             token.issuer(config.getTeamId());
             token.iat(currentTime);
             token.exp(currentTime + 15 * 60);
-            token.audience("htthttps://sevillafc.ott.es");
+            token.audience("https://sevillafc.ott.es");
             token.subject(config.getClientId());
             String clientSecret = new JWSBuilder().jsonContent(token).sign(signer);
 
