@@ -45,10 +45,8 @@ public class DruidIdentityProvider extends OIDCIdentityProvider implements Socia
     public DruidIdentityProvider(KeycloakSession session, DruidIdentityProviderConfig config) {
         super(session, config);
         String defaultScope = config.getDefaultScope();
-        //
-        logger.debugf("defaultScope ", defaultScope);
         String isProd = config.getProd();
-        logger.debugf("isProd ", isProd);
+        logger.infof("isProd ", isProd);
         //
         config.setAuthorizationUrl(AUTH_URL_TEST);
         config.setTokenUrl(TOKEN_URL_TEST);
