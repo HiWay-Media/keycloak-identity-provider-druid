@@ -8,8 +8,16 @@ import java.security.spec.InvalidKeySpecException;
 import java.security.spec.PKCS8EncodedKeySpec;
 import java.util.Base64;
 
+import jakarta.ws.rs.FormParam;
+import jakarta.ws.rs.POST;
+import jakarta.ws.rs.core.Response;
+import jakarta.ws.rs.core.UriBuilder;
+import org.jboss.logging.Logger;
+import org.keycloak.OAuth2Constants;
+import org.keycloak.broker.oidc.AbstractOAuth2IdentityProvider;
 import org.keycloak.broker.oidc.OIDCIdentityProvider;
 import org.keycloak.broker.oidc.OIDCIdentityProviderConfig;
+import org.keycloak.broker.provider.AuthenticationRequest;
 import org.keycloak.broker.provider.BrokeredIdentityContext;
 import org.keycloak.broker.provider.util.SimpleHttp;
 import org.keycloak.broker.social.SocialIdentityProvider;
@@ -29,10 +37,27 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 public class DruidIdentityProvider extends OIDCIdentityProvider implements SocialIdentityProvider<OIDCIdentityProviderConfig> {
     private String userJson;
+    public static final String OAUTH2_PARAMETER_CODE = "code";
+
+    private static final Logger logger              = Logger.getLogger(DruidIdentityProvider.class);
+    private static final String AUTH_URL            = "https://auth.test.id.sevillafc.es/oauth2/authorize";
+    private static final String TOKEN_URL           = "https://auth.test.id.sevillafc.es/oauth2/token";
+    private static final String JWKS_URL            = "https://auth.test.id.sevillafc.es/oauth2/keys";
+    private static final String ISSUER              = "https://auth.test.id.sevillafc.es";
+    //
+    private static final String AUTH_URL_TEST       = "https://auth.test.id.sevillafc.es/oauth2/authorize";
+    private static final String TOKEN_URL_TEST      = "https://auth.test.id.sevillafc.es/oauth2/token";
+    private static final String JWKS_URL_TEST       = "https://auth.test.id.sevillafc.es/oauth2/keys";
+    private static final String ISSUER_TEST         = "https://auth.test.id.sevillafc.es";
+    static final String DRUID_AUTHZ_CODE            = "druid-authz-code";
+
 
     public DruidIdentityProvider(KeycloakSession session, DruidIdentityProviderConfig config) {
         super(session, config);
         String defaultScope = config.getDefaultScope(); 
+        //
+        logger.debugf("defaultScope ", defaultScope);
+        //
         config.setAuthorizationUrl("https://auth.test.id.sevillafc.es/oauth2/authorize");
         config.setTokenUrl("https://auth.test.id.sevillafc.es/oauth2/token");
         
@@ -44,6 +69,7 @@ public class DruidIdentityProvider extends OIDCIdentityProvider implements Socia
 
     @Override
     public Object callback(RealmModel realm, AuthenticationCallback callback, EventBuilder event) {
+        //return new DruidIdentityProviderEndpoint(this, realm, callback, event, session);
         return new OIDCEndpoint(callback, realm, event);
     }
 
@@ -88,7 +114,7 @@ public class DruidIdentityProvider extends OIDCIdentityProvider implements Socia
             token.issuer(config.getTeamId());
             token.iat(currentTime);
             token.exp(currentTime + 15 * 60);
-            token.audience("htthttps://sevillafc.ott.es");
+            token.audience("https://sevillafc.ott.es");
             token.subject(config.getClientId());
             String clientSecret = new JWSBuilder().jsonContent(token).sign(signer);
 
@@ -106,30 +132,22 @@ public class DruidIdentityProvider extends OIDCIdentityProvider implements Socia
     }
 
 
-   /* @Override
+    @Override
     protected UriBuilder createAuthorizationUrl(AuthenticationRequest request) {
         UriBuilder uriBuilder = super.createAuthorizationUrl(request);
 
         final DruidIdentityProviderConfig config = (DruidIdentityProviderConfig) getConfig();
-        
+        //
         uriBuilder.queryParam(OAUTH2_PARAMETER_STATE, request.getState().getEncoded())
-        .queryParam(OAUTH2_PARAMETER_RESPONSE_TYPE, "code")
-        .queryParam(OAUTH2_PARAMETER_CLIENT_ID, config.getClientId())
-        .queryParam(OAUTH2_PARAMETER_REDIRECT_URI, request.getRedirectUri());
-
-        // final UriBuilder uriBuilder = UriBuilder.fromUri(getConfig().getAuthorizationUrl())
-        //         .queryParam(OAUTH2_PARAMETER_SCOPE, getConfig().getDefaultScope())
-        //         .queryParam(OAUTH2_PARAMETER_STATE, request.getState().getEncoded())
-        //         .queryParam(OAUTH2_PARAMETER_RESPONSE_TYPE, "code")
-        //         .queryParam(OAUTH2_PARAMETER_CLIENT_ID, getConfig().getClientId())
-        //         .queryParam(OAUTH2_PARAMETER_REDIRECT_URI, request.getRedirectUri());
-
+            .queryParam(OAUTH2_PARAMETER_RESPONSE_TYPE, "code")
+            .queryParam(OAUTH2_PARAMETER_CLIENT_ID, config.getClientId())
+            .queryParam(OAUTH2_PARAMETER_REDIRECT_URI, request.getRedirectUri());
         return uriBuilder;
     }
 
     protected class OIDCEndpoint extends OIDCIdentityProvider.OIDCEndpoint {
         public OIDCEndpoint(AuthenticationCallback callback, RealmModel realm, EventBuilder event) {
-            super(callback, realm, event);
+            super(callback, realm, event, DruidIdentityProvider.this);
         }
 
         @POST
@@ -139,9 +157,9 @@ public class DruidIdentityProvider extends OIDCIdentityProvider implements Socia
                 @FormParam("user") String userJson,
                 @FormParam(OAuth2Constants.ERROR) String error) {
             DruidIdentityProvider.this.userJson = userJson;
-            return super.authResponse(state, authorizationCode, error);
+            return super.authResponse(state, authorizationCode, error, error);
         }
-    }*/
+    }
 
 
 
