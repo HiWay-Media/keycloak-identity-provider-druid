@@ -114,7 +114,7 @@ public class DruidIdentityProvider extends OIDCIdentityProvider implements Socia
         String id = getJsonProperty(profile, "sub");
         logger.infof("extractIdentityFromProfile before id: %s", id);
         try {
-            BrokeredIdentityContext user = new BrokeredIdentityContext(id, this.getConfig());
+            BrokeredIdentityContext user = new BrokeredIdentityContext(id, this.config.getConfig());
             logger.infof("extractIdentityFromProfile user: %s", user);
             String email = getJsonProperty(profile, "email");
             if (email == null && profile.has("userPrincipalName")) {
