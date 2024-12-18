@@ -82,7 +82,7 @@ public class DruidIdentityProvider extends OIDCIdentityProvider implements Socia
     protected BrokeredIdentityContext doGetFederatedIdentity(String accessToken) {
         logger.infof("doGetFederatedIdentity before accessToken: %s", accessToken);
         try {
-            JsonNode profile = SimpleHttp.doGet(PROFILE_URL, session).auth(accessToken).asJson();
+            JsonNode profile = SimpleHttp.doGet(PROFILE_URL, session).header("Authorization", "Bearer " + accessToken).asJson();
             logger.infof("doGetFederatedIdentity response: %s", profile);
             if (profile.has("error") && !profile.get("error").isNull()) {
                 throw new IdentityBrokerException("Error in Druid Graph API response. Payload: " + profile.toString());
