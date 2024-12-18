@@ -25,7 +25,7 @@ import jakarta.ws.rs.POST;
 import jakarta.ws.rs.core.Response;
 import jakarta.ws.rs.core.UriBuilder;
 
-public class DruidIdentityProvider extends OIDCIdentityProvider, AbstractOAuth2IdentityProvider implements SocialIdentityProvider<OIDCIdentityProviderConfig> {
+public class DruidIdentityProvider extends AbstractOAuth2IdentityProvider<OIDCIdentityProviderConfig> implements SocialIdentityProvider<OIDCIdentityProviderConfig> {
     //private String userJson;
     public static final String OAUTH2_PARAMETER_CODE = "code";
 
