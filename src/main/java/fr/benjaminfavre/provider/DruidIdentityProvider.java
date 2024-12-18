@@ -172,7 +172,7 @@ public class DruidIdentityProvider extends OIDCIdentityProvider implements Socia
                 @FormParam("user") String userJson,
                 @FormParam(OAuth2Constants.ERROR) String error) {
             DruidIdentityProvider.this.userJson = userJson;
-            return super.authResponse(state, authorizationCode, error);
+            return super.authResponse(state, authorizationCode, userJson, error);
         }
     }
 
