@@ -52,6 +52,7 @@ jobs:
         run: |
           pwd
           ls -l
+          ls -l  build/libs/*.jar
       #
       - name: Release artifacts
         uses: softprops/action-gh-release@v2
@@ -60,7 +61,7 @@ jobs:
           body: "# Release ${{github.ref}} \n"
           files: |
             LICENSE
-            ./tmp-artifacts
+            build/libs/*.jar
       #
       #- name: "Create release"
       #  run: gh release create ${GITHUB_REF_NAME} tmp-artifacts/* --generate-notes --verify-tag
