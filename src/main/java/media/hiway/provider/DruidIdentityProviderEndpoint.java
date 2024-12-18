@@ -16,7 +16,7 @@ import org.keycloak.services.messages.Messages;
 
 import static media.hiway.provider.DruidIdentityProvider.OAUTH2_PARAMETER_CODE;
 
-public class DruidIdentityProviderEndpoint {
+public class DruidIdentityProviderEndpoint  {
 
     protected static final Logger logger = Logger.getLogger(DruidIdentityProviderEndpoint.class);
 
