@@ -25,8 +25,8 @@ import jakarta.ws.rs.POST;
 import jakarta.ws.rs.core.Response;
 import jakarta.ws.rs.core.UriBuilder;
 
-public class DruidIdentityProvider extends OIDCIdentityProvider implements SocialIdentityProvider<OIDCIdentityProviderConfig> {
-    private String userJson;
+public class DruidIdentityProvider extends OIDCIdentityProvider, AbstractOAuth2IdentityProvider implements SocialIdentityProvider<OIDCIdentityProviderConfig> {
+    //private String userJson;
     public static final String OAUTH2_PARAMETER_CODE = "code";
 
     private static final Logger logger              = Logger.getLogger(DruidIdentityProvider.class);
@@ -41,24 +41,25 @@ public class DruidIdentityProvider extends OIDCIdentityProvider implements Socia
     // private static final String JWKS_URL_TEST       = "https://auth.test.id.sevillafc.es/oauth2/keys";
     // private static final String ISSUER_TEST         = "https://auth.test.id.sevillafc.es";
     static final String DRUID_AUTHZ_CODE            = "druid-authz-code";
+    //
     private final DruidIdentityProviderConfig config;
 
     public DruidIdentityProvider(KeycloakSession session, DruidIdentityProviderConfig config) {
         super(session, config);
-        String defaultScope = config.getDefaultScope();
+        logger.infof("DruidIdentityProvider config ", config);
+        //String defaultScope = config.getDefaultScope();
         String isProd = config.getProd();
-        logger.infof("isProd ", isProd);
         this.config = config;
-        logger.infof("config ", config);
+        logger.infof("isProd ", isProd);
         //
         config.setAuthorizationUrl(AUTH_URL_TEST);
         config.setTokenUrl(TOKEN_URL_TEST);
         config.setUserInfoUrl(PROFILE_URL);
-        
+        config.setDefaultScope("");
         // check if inside the config exist openid likes scope=openid+email+name, if yes remove it 
-        if (defaultScope.contains(SCOPE_OPENID)) {
+        /*if (defaultScope.contains(SCOPE_OPENID)) {
             config.setDefaultScope("");
-        }
+        }*/
     }
 
     @Override
@@ -178,22 +179,9 @@ public class DruidIdentityProvider extends OIDCIdentityProvider implements Socia
                 @FormParam(OAuth2Constants.ERROR) String error) {
             //
             logger.infof("authResponse state: %s | userJson %s", state, userJson);
-            DruidIdentityProvider.this.userJson = userJson;
+            //DruidIdentityProvider.this.userJson = userJson;
             return super.authResponse(state, authorizationCode, error, error);
         }
     }
-
-
-
-    @JsonIgnoreProperties(ignoreUnknown = true)
-    private static class User {
-        public String email;
-        public Name name;
-
-        @JsonIgnoreProperties(ignoreUnknown = true)
-        private static class Name {
-            public String firstName;
-            public String lastName;
-        }
-    }
+    
 }
