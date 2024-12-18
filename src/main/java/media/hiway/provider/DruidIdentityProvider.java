@@ -65,8 +65,9 @@ public class DruidIdentityProvider extends OIDCIdentityProvider implements Socia
     @Override
     public BrokeredIdentityContext getFederatedIdentity(String response) {
         BrokeredIdentityContext context = super.getFederatedIdentity(response);
-
+        logger.infof("getFederatedIdentity response: %s", response);
         if (userJson != null) {
+            logger.infof("getFederatedIdentity userJson: %s", userJson);
             try {
                 User user = JsonSerialization.readValue(userJson, User.class);
                 context.setEmail(user.email);
@@ -148,6 +149,8 @@ public class DruidIdentityProvider extends OIDCIdentityProvider implements Socia
                 @FormParam(AbstractOAuth2IdentityProvider.OAUTH2_PARAMETER_CODE) String authorizationCode,
                 @FormParam("user") String userJson,
                 @FormParam(OAuth2Constants.ERROR) String error) {
+            //
+            logger.infof("authResponse state: %s | userJson %s", state, userJson);
             DruidIdentityProvider.this.userJson = userJson;
             return super.authResponse(state, authorizationCode, error, error);
         }
