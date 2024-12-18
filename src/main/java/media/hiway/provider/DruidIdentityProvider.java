@@ -49,6 +49,7 @@ public class DruidIdentityProvider extends OIDCIdentityProvider implements Socia
         String isProd = config.getProd();
         logger.infof("isProd ", isProd);
         this.config = config;
+        logger.infof("config ", config);
         //
         config.setAuthorizationUrl(AUTH_URL_TEST);
         config.setTokenUrl(TOKEN_URL_TEST);
@@ -114,6 +115,7 @@ public class DruidIdentityProvider extends OIDCIdentityProvider implements Socia
         String id = getJsonProperty(profile, "sub");
         logger.infof("extractIdentityFromProfile before id: %s", id);
         try {
+            logger.infof("extractIdentityFromProfile config ", this.config);
             BrokeredIdentityContext user = new BrokeredIdentityContext(id, this.config);
             logger.infof("extractIdentityFromProfile user: %s", user);
             String email = getJsonProperty(profile, "email");
