@@ -44,7 +44,8 @@ public class DruidIdentityProvider extends OIDCIdentityProvider implements Socia
 
     @Override
     public Object callback(RealmModel realm, AuthenticationCallback callback, EventBuilder event) {
-        return new OIDCEndpoint(callback, realm, event, this);
+        return new DruidIdenityProviderEndpoint(this, realm, callback, event, session);
+        //return new OIDCEndpoint(callback, realm, event, this);
     }
 
     @Override
