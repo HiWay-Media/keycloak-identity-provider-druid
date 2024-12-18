@@ -42,12 +42,15 @@ public class DruidIdentityProvider extends OIDCIdentityProvider implements Socia
     // private static final String ISSUER_TEST         = "https://auth.test.id.sevillafc.es";
     static final String DRUID_AUTHZ_CODE            = "druid-authz-code";
 
+    private final DruidIdentityProviderConfig config;
+
 
     public DruidIdentityProvider(KeycloakSession session, DruidIdentityProviderConfig config) {
         super(session, config);
         String defaultScope = config.getDefaultScope();
         String isProd = config.getProd();
         logger.infof("isProd ", isProd);
+        this.config = config;
         //
         config.setAuthorizationUrl(AUTH_URL_TEST);
         config.setTokenUrl(TOKEN_URL_TEST);
@@ -113,7 +116,7 @@ public class DruidIdentityProvider extends OIDCIdentityProvider implements Socia
         String id = getJsonProperty(profile, "sub");
         logger.infof("extractIdentityFromProfile before id: %s", id);
         try {
-            BrokeredIdentityContext user = new BrokeredIdentityContext(id, this.getConfig());
+            BrokeredIdentityContext user = new BrokeredIdentityContext(id, this.config);
             logger.infof("extractIdentityFromProfile user: %s", user);
             String email = getJsonProperty(profile, "email");
             if (email == null && profile.has("userPrincipalName")) {
@@ -129,7 +132,7 @@ public class DruidIdentityProvider extends OIDCIdentityProvider implements Socia
                 user.setEmail(email);
             user.setIdp(this);
 
-            AbstractJsonUserAttributeMapper.storeUserProfileForMapper(user, profile, config.getAlias());
+            AbstractJsonUserAttributeMapper.storeUserProfileForMapper(user, profile, this.config.getAlias());
             return user;
         } catch (Exception e) {
             throw new IdentityBrokerException("Could not obtain user profile from Druid Graph", e);
