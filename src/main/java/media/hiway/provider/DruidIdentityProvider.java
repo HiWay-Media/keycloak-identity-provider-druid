@@ -9,6 +9,7 @@ import org.keycloak.broker.oidc.OIDCIdentityProvider;
 import org.keycloak.broker.oidc.OIDCIdentityProviderConfig;
 import org.keycloak.broker.provider.AuthenticationRequest;
 import org.keycloak.broker.provider.BrokeredIdentityContext;
+import org.keycloak.broker.provider.util.SimpleHttp;
 import org.keycloak.broker.social.SocialIdentityProvider;
 import org.keycloak.events.EventBuilder;
 import org.keycloak.models.KeycloakSession;
@@ -27,15 +28,15 @@ public class DruidIdentityProvider extends OIDCIdentityProvider implements Socia
     public static final String OAUTH2_PARAMETER_CODE = "code";
 
     private static final Logger logger              = Logger.getLogger(DruidIdentityProvider.class);
-    private static final String AUTH_URL            = "https://auth.id.sevillafc.es/oauth2/authorize";
-    private static final String TOKEN_URL           = "https://auth.id.sevillafc.es/oauth2/token";
-    private static final String JWKS_URL            = "https://auth.id.sevillafc.es/oauth2/keys";
-    private static final String ISSUER              = "https://auth.id.sevillafc.es";
+    // private static final String AUTH_URL            = "https://auth.id.sevillafc.es/oauth2/authorize";
+    // private static final String TOKEN_URL           = "https://auth.id.sevillafc.es/oauth2/token";
+    // private static final String JWKS_URL            = "https://auth.id.sevillafc.es/oauth2/keys";
+    // private static final String ISSUER              = "https://auth.id.sevillafc.es";
     //
     private static final String AUTH_URL_TEST       = "https://auth.test.id.sevillafc.es/oauth2/authorize";
     private static final String TOKEN_URL_TEST      = "https://auth.test.id.sevillafc.es/oauth2/token";
-    private static final String JWKS_URL_TEST       = "https://auth.test.id.sevillafc.es/oauth2/keys";
-    private static final String ISSUER_TEST         = "https://auth.test.id.sevillafc.es";
+    // private static final String JWKS_URL_TEST       = "https://auth.test.id.sevillafc.es/oauth2/keys";
+    // private static final String ISSUER_TEST         = "https://auth.test.id.sevillafc.es";
     static final String DRUID_AUTHZ_CODE            = "druid-authz-code";
 
 
@@ -80,42 +81,22 @@ public class DruidIdentityProvider extends OIDCIdentityProvider implements Socia
         return context;
     }
 
-    // @Override
-    // public SimpleHttp authenticateTokenRequest(SimpleHttp tokenRequest) {
-    //     logger.info("SimpleHTTP");
-    //     DruidIdentityProviderConfig config = (DruidIdentityProviderConfig) getConfig();
-    //     tokenRequest.param(OAUTH2_PARAMETER_CLIENT_ID, config.getClientId());
-    //     String base64PrivateKey = config.getClientSecret();
-        
-    //     try {
-    //         KeyFactory keyFactory = KeyFactory.getInstance("EC");
-    //         logger.info(keyFactory.toString());
-    //         byte[] pkc8ePrivateKey = Base64.getDecoder().decode(base64PrivateKey);
-    //         PKCS8EncodedKeySpec keySpecPKCS8 = new PKCS8EncodedKeySpec(pkc8ePrivateKey);
-    //         PrivateKey privateKey = keyFactory.generatePrivate(keySpecPKCS8);
+    @Override
+    public SimpleHttp authenticateTokenRequest(SimpleHttp tokenRequest) {
+        logger.infof("SimpleHTTP", tokenRequest);        
+        return super.authenticateTokenRequest(tokenRequest);
+    }
 
-    //         KeyWrapper keyWrapper = new KeyWrapper();
-    //         keyWrapper.setAlgorithm(Algorithm.ES256);
-    //         keyWrapper.setKid(config.getKeyId());
-    //         keyWrapper.setPrivateKey(privateKey);
-    //         SignatureSignerContext signer = new ServerECDSASignatureSignerContext(keyWrapper);
-
-    //         long currentTime = Time.currentTime();
-    //         JsonWebToken token = new JsonWebToken();
-    //         // token.issuer(config.getTeamId());
-    //         token.iat(currentTime);
-    //         token.exp(currentTime + 15 * 60);
-    //         token.audience("https://sevillafc.ott.es");
-    //         token.subject(config.getClientId());
-    //         String clientSecret = new JWSBuilder().jsonContent(token).sign(signer);
-
-    //         tokenRequest.param(OAUTH2_PARAMETER_CLIENT_SECRET, clientSecret);
-
-    //     } catch (NoSuchAlgorithmException | InvalidKeySpecException e) {
-    //         logger.errorf("Failed to generate client secret: %s", e);
+    // {
+    //     "access_token": "{_your_access_token_}",
+    //     "token_type": "bearer",
+    //     "expires_in": 900,
+    //     "expires_at": 13423423423,
+    //     "refresh_token": "{_your_refresh_token_}",
+    //     "login_status": {
+    //     "uid": 4475,
+    //     "connect_state": "connected"
     //     }
-
-    //     return tokenRequest;
     // }
 
     @Override
