@@ -1,4 +1,4 @@
-package fr.benjaminfavre.provider;
+package media.hiway.provider;
 
 import java.io.IOException;
 import java.security.KeyFactory;
@@ -6,20 +6,15 @@ import java.security.NoSuchAlgorithmException;
 import java.security.PrivateKey;
 import java.security.spec.InvalidKeySpecException;
 import java.security.spec.PKCS8EncodedKeySpec;
-import java.util.Arrays;
 import java.util.Base64;
-import java.util.List;
 
-import javax.ws.rs.FormParam;
-import javax.ws.rs.POST;
-import javax.ws.rs.core.Response;
-import javax.ws.rs.core.UriBuilder;
+//import javax.ws.rs.FormParam;
+//import javax.ws.rs.POST;
+//import javax.ws.rs.core.Response;
+//import javax.ws.rs.core.UriBuilder;
 
-import org.keycloak.OAuth2Constants;
-import org.keycloak.broker.oidc.AbstractOAuth2IdentityProvider;
 import org.keycloak.broker.oidc.OIDCIdentityProvider;
 import org.keycloak.broker.oidc.OIDCIdentityProviderConfig;
-import org.keycloak.broker.provider.AuthenticationRequest;
 import org.keycloak.broker.provider.BrokeredIdentityContext;
 import org.keycloak.broker.provider.util.SimpleHttp;
 import org.keycloak.broker.social.SocialIdentityProvider;
@@ -32,8 +27,6 @@ import org.keycloak.events.EventBuilder;
 import org.keycloak.jose.jws.JWSBuilder;
 import org.keycloak.models.KeycloakSession;
 import org.keycloak.models.RealmModel;
-import org.keycloak.protocol.oidc.OIDCLoginProtocol;
-import org.keycloak.protocol.oidc.endpoints.AuthorizationEndpoint;
 import org.keycloak.representations.JsonWebToken;
 import org.keycloak.util.JsonSerialization;
 
@@ -56,7 +49,7 @@ public class DruidIdentityProvider extends OIDCIdentityProvider implements Socia
 
     @Override
     public Object callback(RealmModel realm, AuthenticationCallback callback, EventBuilder event) {
-        return new OIDCEndpoint(callback, realm, event);
+        return new OIDCEndpoint(callback, realm, event, this);
     }
 
     @Override
@@ -118,7 +111,7 @@ public class DruidIdentityProvider extends OIDCIdentityProvider implements Socia
     }
 
 
-    @Override
+   /* @Override
     protected UriBuilder createAuthorizationUrl(AuthenticationRequest request) {
         final UriBuilder uriBuilder = UriBuilder.fromUri(getConfig().getAuthorizationUrl())
                 // .queryParam(OAUTH2_PARAMETER_SCOPE, getConfig().getDefaultScope())
@@ -174,7 +167,7 @@ public class DruidIdentityProvider extends OIDCIdentityProvider implements Socia
             DruidIdentityProvider.this.userJson = userJson;
             return super.authResponse(state, authorizationCode, error);
         }
-    }
+    }*/
 
 
 
