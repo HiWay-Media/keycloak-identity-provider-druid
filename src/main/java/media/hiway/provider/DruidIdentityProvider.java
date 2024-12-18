@@ -1,22 +1,23 @@
 package media.hiway.provider;
 
-import java.io.IOException;
-
 import org.jboss.logging.Logger;
 import org.keycloak.OAuth2Constants;
 import org.keycloak.broker.oidc.AbstractOAuth2IdentityProvider;
 import org.keycloak.broker.oidc.OIDCIdentityProvider;
 import org.keycloak.broker.oidc.OIDCIdentityProviderConfig;
+import org.keycloak.broker.oidc.mappers.AbstractJsonUserAttributeMapper;
 import org.keycloak.broker.provider.AuthenticationRequest;
 import org.keycloak.broker.provider.BrokeredIdentityContext;
+import org.keycloak.broker.provider.IdentityBrokerException;
 import org.keycloak.broker.provider.util.SimpleHttp;
 import org.keycloak.broker.social.SocialIdentityProvider;
 import org.keycloak.events.EventBuilder;
 import org.keycloak.models.KeycloakSession;
 import org.keycloak.models.RealmModel;
-import org.keycloak.util.JsonSerialization;
+import org.keycloak.services.validation.Validation;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.databind.JsonNode;
 
 import jakarta.ws.rs.FormParam;
 import jakarta.ws.rs.POST;
@@ -35,6 +36,7 @@ public class DruidIdentityProvider extends OIDCIdentityProvider implements Socia
     //
     private static final String AUTH_URL_TEST       = "https://auth.test.id.sevillafc.es/oauth2/authorize";
     private static final String TOKEN_URL_TEST      = "https://auth.test.id.sevillafc.es/oauth2/token";
+    private static final String PROFILE_URL         = "https://graph.test.id.sevillafc.es/activityid/v1/user/userinfo";
     // private static final String JWKS_URL_TEST       = "https://auth.test.id.sevillafc.es/oauth2/keys";
     // private static final String ISSUER_TEST         = "https://auth.test.id.sevillafc.es";
     static final String DRUID_AUTHZ_CODE            = "druid-authz-code";
@@ -58,29 +60,61 @@ public class DruidIdentityProvider extends OIDCIdentityProvider implements Socia
     }
 
     @Override
+    protected String getProfileEndpointForValidation(EventBuilder event) {
+        return PROFILE_URL;
+    }
+
+    @Override
     public Object callback(RealmModel realm, AuthenticationCallback callback, EventBuilder event) {
         //return new DruidIdentityProviderEndpoint(this, realm, callback, event, session);
         return new OIDCEndpoint(callback, realm, event);
     }
-
+    
     @Override
     public BrokeredIdentityContext getFederatedIdentity(String response) {
         logger.infof("getFederatedIdentity before response: %s", response);
         BrokeredIdentityContext context = super.getFederatedIdentity(response);
         logger.infof("getFederatedIdentity response: %s and context: %s", response, context);
-        if (userJson != null) {
-            logger.infof("getFederatedIdentity userJson: %s", userJson);
-            try {
-                User user = JsonSerialization.readValue(userJson, User.class);
-                context.setEmail(user.email);
-                context.setFirstName(user.name.firstName);
-                context.setLastName(user.name.lastName);
-            } catch (IOException e) {
-                logger.errorf("Failed to parse userJson [%s]: %s", userJson, e);
+        return context;
+    }
+
+
+    @Override
+    protected BrokeredIdentityContext doGetFederatedIdentity(String accessToken) {
+        try {
+            JsonNode profile = SimpleHttp.doGet(PROFILE_URL, session).auth(accessToken).asJson();
+            if (profile.has("error") && !profile.get("error").isNull()) {
+                throw new IdentityBrokerException("Error in Druid Graph API response. Payload: " + profile.toString());
+            }
+            return extractIdentityFromProfile(null, profile);
+        } catch (Exception e) {
+            throw new IdentityBrokerException("Could not obtain user profile from Druid Graph", e);
+        }
+    }
+
+    @Override
+    protected BrokeredIdentityContext extractIdentityFromProfile(EventBuilder event, JsonNode profile) {
+        String id = getJsonProperty(profile, "sub");
+        BrokeredIdentityContext user = new BrokeredIdentityContext(id, getConfig());
+
+        String email = getJsonProperty(profile, "email");
+        // non saprei
+        if (email == null && profile.has("userPrincipalName")) {
+            String username = getJsonProperty(profile, "userPrincipalName");
+            if (Validation.isEmailValid(username)) {
+                email = username;
             }
         }
 
-        return context;
+        user.setUsername(email != null ? email : id);
+        user.setFirstName(getJsonProperty(profile, "name"));
+        user.setLastName(getJsonProperty(profile, "family_name"));
+        if (email != null)
+            user.setEmail(email);
+        user.setIdp(this);
+
+        AbstractJsonUserAttributeMapper.storeUserProfileForMapper(user, profile, getConfig().getAlias());
+        return user;
     }
 
     @Override
