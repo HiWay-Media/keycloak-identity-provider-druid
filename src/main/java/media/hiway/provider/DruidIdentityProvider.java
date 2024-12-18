@@ -1,17 +1,7 @@
 package media.hiway.provider;
 
 import java.io.IOException;
-import java.security.KeyFactory;
-import java.security.NoSuchAlgorithmException;
-import java.security.PrivateKey;
-import java.security.spec.InvalidKeySpecException;
-import java.security.spec.PKCS8EncodedKeySpec;
-import java.util.Base64;
 
-import jakarta.ws.rs.FormParam;
-import jakarta.ws.rs.POST;
-import jakarta.ws.rs.core.Response;
-import jakarta.ws.rs.core.UriBuilder;
 import org.jboss.logging.Logger;
 import org.keycloak.OAuth2Constants;
 import org.keycloak.broker.oidc.AbstractOAuth2IdentityProvider;
@@ -19,21 +9,18 @@ import org.keycloak.broker.oidc.OIDCIdentityProvider;
 import org.keycloak.broker.oidc.OIDCIdentityProviderConfig;
 import org.keycloak.broker.provider.AuthenticationRequest;
 import org.keycloak.broker.provider.BrokeredIdentityContext;
-import org.keycloak.broker.provider.util.SimpleHttp;
 import org.keycloak.broker.social.SocialIdentityProvider;
-import org.keycloak.common.util.Time;
-import org.keycloak.crypto.Algorithm;
-import org.keycloak.crypto.KeyWrapper;
-import org.keycloak.crypto.ServerECDSASignatureSignerContext;
-import org.keycloak.crypto.SignatureSignerContext;
 import org.keycloak.events.EventBuilder;
-import org.keycloak.jose.jws.JWSBuilder;
 import org.keycloak.models.KeycloakSession;
 import org.keycloak.models.RealmModel;
-import org.keycloak.representations.JsonWebToken;
 import org.keycloak.util.JsonSerialization;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
+import jakarta.ws.rs.FormParam;
+import jakarta.ws.rs.POST;
+import jakarta.ws.rs.core.Response;
+import jakarta.ws.rs.core.UriBuilder;
 
 public class DruidIdentityProvider extends OIDCIdentityProvider implements SocialIdentityProvider<OIDCIdentityProviderConfig> {
     private String userJson;
@@ -93,40 +80,43 @@ public class DruidIdentityProvider extends OIDCIdentityProvider implements Socia
         return context;
     }
 
-    @Override
-    public SimpleHttp authenticateTokenRequest(SimpleHttp tokenRequest) {
-        DruidIdentityProviderConfig config = (DruidIdentityProviderConfig) getConfig();
-        tokenRequest.param(OAUTH2_PARAMETER_CLIENT_ID, config.getClientId());
-        String base64PrivateKey = config.getClientSecret();
+    // @Override
+    // public SimpleHttp authenticateTokenRequest(SimpleHttp tokenRequest) {
+    //     logger.info("SimpleHTTP");
+    //     DruidIdentityProviderConfig config = (DruidIdentityProviderConfig) getConfig();
+    //     tokenRequest.param(OAUTH2_PARAMETER_CLIENT_ID, config.getClientId());
+    //     String base64PrivateKey = config.getClientSecret();
+        
+    //     try {
+    //         KeyFactory keyFactory = KeyFactory.getInstance("EC");
+    //         logger.info(keyFactory.toString());
+    //         byte[] pkc8ePrivateKey = Base64.getDecoder().decode(base64PrivateKey);
+    //         PKCS8EncodedKeySpec keySpecPKCS8 = new PKCS8EncodedKeySpec(pkc8ePrivateKey);
+    //         PrivateKey privateKey = keyFactory.generatePrivate(keySpecPKCS8);
 
-        try {
-            KeyFactory keyFactory = KeyFactory.getInstance("EC");
-            byte[] pkc8ePrivateKey = Base64.getDecoder().decode(base64PrivateKey);
-            PKCS8EncodedKeySpec keySpecPKCS8 = new PKCS8EncodedKeySpec(pkc8ePrivateKey);
-            PrivateKey privateKey = keyFactory.generatePrivate(keySpecPKCS8);
+    //         KeyWrapper keyWrapper = new KeyWrapper();
+    //         keyWrapper.setAlgorithm(Algorithm.ES256);
+    //         keyWrapper.setKid(config.getKeyId());
+    //         keyWrapper.setPrivateKey(privateKey);
+    //         SignatureSignerContext signer = new ServerECDSASignatureSignerContext(keyWrapper);
 
-            KeyWrapper keyWrapper = new KeyWrapper();
-            keyWrapper.setAlgorithm(Algorithm.ES256);
-            keyWrapper.setKid(config.getKeyId());
-            keyWrapper.setPrivateKey(privateKey);
-            SignatureSignerContext signer = new ServerECDSASignatureSignerContext(keyWrapper);
+    //         long currentTime = Time.currentTime();
+    //         JsonWebToken token = new JsonWebToken();
+    //         // token.issuer(config.getTeamId());
+    //         token.iat(currentTime);
+    //         token.exp(currentTime + 15 * 60);
+    //         token.audience("https://sevillafc.ott.es");
+    //         token.subject(config.getClientId());
+    //         String clientSecret = new JWSBuilder().jsonContent(token).sign(signer);
 
-            long currentTime = Time.currentTime();
-            JsonWebToken token = new JsonWebToken();
-            token.issuer(config.getTeamId());
-            token.iat(currentTime);
-            token.exp(currentTime + 15 * 60);
-            token.audience("https://sevillafc.ott.es");
-            token.subject(config.getClientId());
-            String clientSecret = new JWSBuilder().jsonContent(token).sign(signer);
+    //         tokenRequest.param(OAUTH2_PARAMETER_CLIENT_SECRET, clientSecret);
 
-            tokenRequest.param(OAUTH2_PARAMETER_CLIENT_SECRET, clientSecret);
-        } catch (NoSuchAlgorithmException | InvalidKeySpecException e) {
-            logger.errorf("Failed to generate client secret: %s", e);
-        }
+    //     } catch (NoSuchAlgorithmException | InvalidKeySpecException e) {
+    //         logger.errorf("Failed to generate client secret: %s", e);
+    //     }
 
-        return tokenRequest;
-    }
+    //     return tokenRequest;
+    // }
 
     @Override
     protected String getDefaultScopes() {
