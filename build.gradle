@@ -3,7 +3,7 @@ plugins {
     id 'maven-publish'
 }
 
-group 'at.klausbetz'
+group 'media.hiway'
 version '1.13.0'
 java.sourceCompatibility = JavaVersion.VERSION_11
 
