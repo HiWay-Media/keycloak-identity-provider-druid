@@ -12,3 +12,11 @@
     </div>
     <kc-tooltip>{{:: 'druid.teamIdToolTip' | translate}}</kc-tooltip>
 </div>
+
+<div class="form-group">
+    <label class="col-md-2 control-label" for="prodEnv"><span class="required">*</span> {{:: 'druid.prodEnv' | translate}}</label>
+    <div class="col-md-6">
+        <input ng-model="identityProvider.config.prodEnv" id="prodEnv" class="form-control" />
+    </div>
+    <kc-tooltip>{{:: 'druid.prodEnvToolTip' | translate}}</kc-tooltip>
+</div>
