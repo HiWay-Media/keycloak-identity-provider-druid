@@ -47,6 +47,7 @@ public class DruidIdentityProviderEndpoint {
             return errorIdentityProviderLogin(Messages.IDENTITY_PROVIDER_MISSING_STATE_ERROR);
         }
         // TODO
+        logger.debugf("State is %s", state);
         return errorIdentityProviderLogin(Messages.IDENTITY_PROVIDER_UNEXPECTED_ERROR);
     }
 
