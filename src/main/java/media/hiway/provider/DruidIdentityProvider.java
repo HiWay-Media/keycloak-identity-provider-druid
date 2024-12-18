@@ -107,13 +107,11 @@ public class DruidIdentityProvider extends OIDCIdentityProvider implements Socia
 
             KeyWrapper keyWrapper = new KeyWrapper();
             keyWrapper.setAlgorithm(Algorithm.ES256);
-            keyWrapper.setKid(config.getKeyId());
             keyWrapper.setPrivateKey(privateKey);
             SignatureSignerContext signer = new ServerECDSASignatureSignerContext(keyWrapper);
 
             long currentTime = Time.currentTime();
             JsonWebToken token = new JsonWebToken();
-            token.issuer(config.getTeamId());
             token.iat(currentTime);
             token.exp(currentTime + 15 * 60);
             token.audience("https://sevillafc.ott.es");
