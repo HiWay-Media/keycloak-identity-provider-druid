@@ -129,7 +129,7 @@ public class DruidIdentityProvider extends OIDCIdentityProvider implements Socia
                 user.setEmail(email);
             user.setIdp(this);
 
-            AbstractJsonUserAttributeMapper.storeUserProfileForMapper(user, profile, config.getAlias());
+            AbstractJsonUserAttributeMapper.storeUserProfileForMapper(user, profile, this.getConfig().getAlias());
             return user;
         } catch (Exception e) {
             throw new IdentityBrokerException("Could not obtain user profile from Druid Graph", e);
