@@ -117,11 +117,12 @@ public class DruidIdentityProvider extends AbstractOAuth2IdentityProvider<DruidI
         logger.infof("extractIdentityFromProfile before id: %s", id);
         try {
             DruidIdentityProviderConfig config = (DruidIdentityProviderConfig) getConfig();
-            logger.infof("extractIdentityFromProfile config ", config);
+            logger.infof("extractIdentityFromProfile config %v", config);
             if (config == null) {
                 config = new DruidIdentityProviderConfig(new IdentityProviderModel());
-                logger.infof("extractIdentityFromProfile config after", config);
+                logger.infof("extractIdentityFromProfile config after %v", config);
             }
+            logger.infof("extractIdentityFromProfile after check config %v", config);
             BrokeredIdentityContext user = new BrokeredIdentityContext(id, config);
             logger.infof("extractIdentityFromProfile user: %s", user);
             String email = getJsonProperty(profile, "email");
