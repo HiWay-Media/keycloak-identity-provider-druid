@@ -13,7 +13,7 @@ public class Config {
     static {
         Properties properties = new Properties();
         //String env = System.getProperty("env", "prod"); // default to prod if env is not set
-        String env = System.getProperty("env", "prod");
+        String env = System.getProperty("env");
         System.out.println("Config Env: " + env);
         String configFileName = "config-" + env + ".properties";
         //
@@ -25,7 +25,6 @@ public class Config {
         } catch (IOException e) {
             throw new RuntimeException("Failed to load configuration", e);
         }
-
         AUTH_URL = properties.getProperty("auth.url");
         TOKEN_URL = properties.getProperty("token.url");
         PROFILE_URL = properties.getProperty("profile.url");

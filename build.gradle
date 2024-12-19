@@ -34,11 +34,10 @@ task jarDev(type: Jar) {
     from('src/main/resources/config-dev.properties') {
         into('config')
     }
-
     doFirst {
         // Set the environment variable as a system property
         System.setProperty('env', "dev")
-        println "# dev environment: " + System.getProperty("env")
+        println "# jarDev environment: " + System.getProperty("env")
     }
 }
 
@@ -49,6 +48,11 @@ task jarProd(type: Jar) {
     // Include the production properties file
     from('src/main/resources/config-prod.properties') {
         into('config')
+    }
+    doFirst {
+        // Set the environment variable as a system property
+        System.setProperty('env', "prod")
+        println "# jarProd environment: " + System.getProperty("env")
     }
 }
 
