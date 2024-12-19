@@ -22,8 +22,11 @@ jobs:
           distribution: 'temurin'
           cache: gradle
       
-      - name: "Build JAR"
-        run: sh gradlew jar
+      - name: "Build JAR dev"
+        run: sh gradlew buildDev -Penv=dev
+
+      - name: "Build JAR PROD "
+        run: sh gradlew buildProd
       
       - name: "Copy JAR to tmp-artifacts"
         run: |
@@ -46,20 +49,7 @@ jobs:
         with:
           name: Package
           path: tmp-artifacts
-      #
-      #- name: "check file"
-      #  run: |
-      #    tar -czvf tmp-artifacts.tar.gz --transform='s|.*/||' ./tmp-artifacts
-      #
-      #- name: Release artifacts
-      #  uses: softprops/action-gh-release@v2
-      #  if: startsWith(github.ref, 'refs/tags/')
-      #  with:
-      #    body: "# Release ${{github.ref}} \n"
-      #    files: |
-      #      LICENSE
-      #      build/libs/*.jar
-      #
+
       - name: "Create release"
         run: gh release create ${GITHUB_REF_NAME} tmp-artifacts/* --generate-notes 
         env:
