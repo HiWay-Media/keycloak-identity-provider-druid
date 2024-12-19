@@ -38,7 +38,7 @@ task jarDev(type: Jar) {
     doFirst {
         // Set the environment variable as a system property
         System.setProperty('env', "dev")
-        println "# dev environment: " + systemProperties['env']
+        println "# dev environment: " + System.getProperty("env")
     }
 }
 
