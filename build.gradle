@@ -25,6 +25,26 @@ dependencies {
     testImplementation 'org.junit.jupiter:junit-jupiter:5.9.0'
 }
 
+// Load the environment property from the command line
+def env = project.hasProperty('env') ? project.getProperty('env') : 'prod'
+
+// Define the properties file to load based on the environment
+def propertiesFile = file("gradle-${env}.properties")
+
+// Check if the properties file exists and load it
+if (propertiesFile.exists()) {
+    println "Loading properties from ${propertiesFile.name}"
+    propertiesFile.withInputStream { stream ->
+        Properties props = new Properties()
+        props.load(stream)
+        props.each { key, value ->
+            project.ext.set(key, value)
+        }
+    }
+} else {
+    throw new GradleException("Properties file for environment '${env}' not found: ${propertiesFile.name}")
+}
+
 // Define tasks to create JARs with custom names based on the environment
 task jarDev(type: Jar) {
     archiveBaseName.set('druid-social-identity-provider-dev')
@@ -33,11 +53,6 @@ task jarDev(type: Jar) {
     // Include the development properties file
     from('src/main/resources/config-dev.properties') {
         into('config')
-    }
-    doFirst {
-        // Set the environment variable as a system property
-        System.setProperty('env', "dev")
-        println "# jarDev environment: " + System.getProperty("env")
     }
 }
 
@@ -48,11 +63,6 @@ task jarProd(type: Jar) {
     // Include the production properties file
     from('src/main/resources/config-prod.properties') {
         into('config')
-    }
-    doFirst {
-        // Set the environment variable as a system property
-        System.setProperty('env', "prod")
-        println "# jarProd environment: " + System.getProperty("env")
     }
 }
 

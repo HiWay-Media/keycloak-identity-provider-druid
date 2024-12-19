@@ -23,7 +23,7 @@ jobs:
           cache: gradle
       
       - name: "Build JAR dev"
-        run: sh gradlew buildDev
+        run: sh gradlew buildDev -Penv=dev
 
       - name: "Build JAR PROD "
         run: sh gradlew buildProd
@@ -49,7 +49,7 @@ jobs:
         with:
           name: Package
           path: tmp-artifacts
-          
+
       - name: "Create release"
         run: gh release create ${GITHUB_REF_NAME} tmp-artifacts/* --generate-notes 
         env:
