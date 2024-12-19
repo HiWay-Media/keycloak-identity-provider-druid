@@ -25,6 +25,35 @@ dependencies {
     testImplementation 'org.junit.jupiter:junit-jupiter:5.9.0'
 }
 
+// Define tasks to create JARs with custom names based on the environment
+task jarDev(type: Jar) {
+    // Include the development properties file
+    from('src/main/resources/config-dev.properties') {
+        into('config')
+    }
+}
+
+task jarProd(type: Jar) {
+    // Include the production properties file
+    from('src/main/resources/config-prod.properties') {
+        into('config')
+    }
+}
+
+// Define build task to depend on specific jar task based on the environment
+task buildDev {
+    dependsOn jarDev
+}
+
+task buildProd {
+    dependsOn jarProd
+}
+
+// Default build task
+build {
+    dependsOn buildProd // Change to buildProd for production by default if needed
+}
+
 test {
     useJUnitPlatform()
 }

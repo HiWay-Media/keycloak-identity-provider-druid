@@ -23,10 +23,10 @@ jobs:
           cache: gradle
       
       - name: "Build JAR dev"
-        run: sh gradlew jar -Penv=dev
+        run: sh gradlew buildDev
 
       - name: "Build JAR PROD "
-        run: sh gradlew jar -Penv=prod
+        run: sh gradlew buildProd
       
       - name: "Copy JAR to tmp-artifacts"
         run: |
