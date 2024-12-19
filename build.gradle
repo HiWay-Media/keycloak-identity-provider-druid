@@ -29,7 +29,7 @@ dependencies {
 def env = project.hasProperty('env') ? project.getProperty('env') : 'prod'
 
 // Define the properties file to load based on the environment
-def propertiesFile = file("gradle-${env}.properties")
+def propertiesFile = file("config-${env}.properties")
 
 // Check if the properties file exists and load it
 if (propertiesFile.exists()) {
@@ -51,7 +51,7 @@ task jarDev(type: Jar) {
     archiveVersion.set(version)
     from sourceSets.main.output
     // Include the development properties file
-    from('src/main/resources/config-dev.properties') {
+    from('config-dev.properties') {
         into('config')
     }
 }
@@ -61,7 +61,7 @@ task jarProd(type: Jar) {
     archiveVersion.set(version)
     from sourceSets.main.output
     // Include the production properties file
-    from('src/main/resources/config-prod.properties') {
+    from('config-prod.properties') {
         into('config')
     }
 }
