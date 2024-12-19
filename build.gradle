@@ -34,12 +34,10 @@ task jarDev(type: Jar) {
     from('src/main/resources/config-dev.properties') {
         into('config')
     }
-    doFirst
-    {
+    doFirst {
         println "CallingStatic dev"
         // Set environment variable in the task
         System.setProperty('env', 'dev') // Default to 'dev' if not specified
-        project.setProperty('env', 'dev')
     }
 }
 
@@ -51,12 +49,10 @@ task jarProd(type: Jar) {
     from('src/main/resources/config-prod.properties') {
         into('config')
     }
-    doFirst
-    {
+    doFirst {
         println "CallingStatic prod"
         // Set environment variable in the task
         System.setProperty('env', 'prod') // Default to 'prod' if not specified
-        project.setProperty('env', 'prod')
     }
 }
 
