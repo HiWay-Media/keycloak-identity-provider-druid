@@ -13,6 +13,7 @@ public class Config {
     static {
         Properties properties = new Properties();
         String env = System.getProperty("env", "prod"); // default to dev if env is not set
+        System.out.println("Env: " + env);
         String configFileName = "config-" + env + ".properties";
         //
         try (InputStream input = Config.class.getClassLoader().getResourceAsStream(configFileName)) {
@@ -27,7 +28,7 @@ public class Config {
         AUTH_URL = properties.getProperty("auth.url");
         TOKEN_URL = properties.getProperty("token.url");
         PROFILE_URL = properties.getProperty("profile.url");
-        // Example usage of the configuration values
+        // 
         System.out.println("Authorization URL: " + AUTH_URL);
         System.out.println("Token URL: " + TOKEN_URL);
         System.out.println("Profile URL: " + PROFILE_URL);

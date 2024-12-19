@@ -34,6 +34,11 @@ task jarDev(type: Jar) {
     from('src/main/resources/config-dev.properties') {
         into('config')
     }
+    // Set environment variable in the task
+    doFirst {
+        environment 'ENV', 'dev'
+        environment 'env', 'dev'
+    }
 }
 
 task jarProd(type: Jar) {
@@ -43,6 +48,11 @@ task jarProd(type: Jar) {
     // Include the production properties file
     from('src/main/resources/config-prod.properties') {
         into('config')
+    }
+    // Set environment variable in the task
+    doFirst {
+        environment 'ENV', 'prod'
+        environment 'env', 'prod'
     }
 }
 
