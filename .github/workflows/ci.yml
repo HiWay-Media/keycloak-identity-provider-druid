@@ -19,10 +19,20 @@ jobs:
       #  uses: gradle/gradle-build-action@67421db6bd0bf253fb4bd25b31ebb98943c375e1
       #  with:
       #    arguments: test
-      - name: Build JAR archive
+      - name: Build JAR archive dev
         uses: gradle/gradle-build-action@67421db6bd0bf253fb4bd25b31ebb98943c375e1
         with:
-          arguments: jar
+          arguments: |
+            jar
+            -Penv=dev
+             
+      - name: Build JAR archive prod
+        uses: gradle/gradle-build-action@67421db6bd0bf253fb4bd25b31ebb98943c375e1
+        with:
+          arguments: |
+            jar
+            -Penv=prod
+
       - uses: actions/upload-artifact@v3
         with:
           name: Package
