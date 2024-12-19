@@ -1,10 +1,7 @@
 package media.hiway.provider;
 
 import org.jboss.logging.Logger;
-import org.keycloak.OAuth2Constants;
 import org.keycloak.broker.oidc.AbstractOAuth2IdentityProvider;
-import org.keycloak.broker.oidc.OIDCIdentityProvider;
-import org.keycloak.broker.oidc.OIDCIdentityProviderConfig;
 import org.keycloak.broker.oidc.mappers.AbstractJsonUserAttributeMapper;
 import org.keycloak.broker.provider.AuthenticationRequest;
 import org.keycloak.broker.provider.BrokeredIdentityContext;
@@ -13,19 +10,15 @@ import org.keycloak.broker.provider.util.SimpleHttp;
 import org.keycloak.broker.social.SocialIdentityProvider;
 import org.keycloak.events.EventBuilder;
 import org.keycloak.models.KeycloakSession;
-import org.keycloak.models.RealmModel;
 import org.keycloak.services.validation.Validation;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-import jakarta.ws.rs.FormParam;
-import jakarta.ws.rs.POST;
-import jakarta.ws.rs.core.Response;
 import jakarta.ws.rs.core.UriBuilder;
 
-public class DruidIdentityProvider extends OIDCIdentityProvider implements SocialIdentityProvider<OIDCIdentityProviderConfig> {
+public class DruidIdentityProvider extends AbstractOAuth2IdentityProvider<DruidIdentityProviderConfig> implements SocialIdentityProvider<DruidIdentityProviderConfig> {
     private String userJson;
     public static final String OAUTH2_PARAMETER_CODE = "code";
 
@@ -41,24 +34,24 @@ public class DruidIdentityProvider extends OIDCIdentityProvider implements Socia
     // private static final String JWKS_URL_TEST       = "https://auth.test.id.sevillafc.es/oauth2/keys";
     // private static final String ISSUER_TEST         = "https://auth.test.id.sevillafc.es";
     static final String DRUID_AUTHZ_CODE            = "druid-authz-code";
-    private final DruidIdentityProviderConfig config;
+    // private final DruidIdentityProviderConfig config;
 
     public DruidIdentityProvider(KeycloakSession session, DruidIdentityProviderConfig config) {
         super(session, config);
         String defaultScope = config.getDefaultScope();
         String isProd = config.getProd();
         logger.infof("isProd ", isProd);
-        this.config = config;
-        logger.infof("config ", config);
+        // this.config = config;
+        // logger.infof("config ", config);
         //
         config.setAuthorizationUrl(AUTH_URL_TEST);
         config.setTokenUrl(TOKEN_URL_TEST);
         config.setUserInfoUrl(PROFILE_URL);
         
         // check if inside the config exist openid likes scope=openid+email+name, if yes remove it 
-        if (defaultScope.contains(SCOPE_OPENID)) {
-            config.setDefaultScope("");
-        }
+        // if (defaultScope.contains(SCOPE_OPENID)) {
+        //     config.setDefaultScope("");
+        // }
     }
 
     @Override
@@ -66,11 +59,17 @@ public class DruidIdentityProvider extends OIDCIdentityProvider implements Socia
         return PROFILE_URL;
     }
 
+
     @Override
-    public Object callback(RealmModel realm, AuthenticationCallback callback, EventBuilder event) {
-        //return new DruidIdentityProviderEndpoint(this, realm, callback, event, session);
-        return new OIDCEndpoint(callback, realm, event);
+    protected boolean supportsExternalExchange() {
+        return true;
     }
+
+    // @Override
+    // public Object callback(RealmModel realm, AuthenticationCallback callback, EventBuilder event) {
+    //     //return new DruidIdentityProviderEndpoint(this, realm, callback, event, session);
+    //     return new OIDCEndpoint(callback, realm, event);
+    // }
     
     @Override
     public BrokeredIdentityContext getFederatedIdentity(String response) {
@@ -115,8 +114,8 @@ public class DruidIdentityProvider extends OIDCIdentityProvider implements Socia
         String id = getJsonProperty(profile, "sub");
         logger.infof("extractIdentityFromProfile before id: %s", id);
         try {
-            logger.infof("extractIdentityFromProfile config ", this.config);
-            BrokeredIdentityContext user = new BrokeredIdentityContext(id, this.config);
+            logger.infof("extractIdentityFromProfile config ", getConfig());
+            BrokeredIdentityContext user = new BrokeredIdentityContext(id, getConfig());
             logger.infof("extractIdentityFromProfile user: %s", user);
             String email = getJsonProperty(profile, "email");
             if (email == null && profile.has("userPrincipalName")) {
@@ -132,7 +131,7 @@ public class DruidIdentityProvider extends OIDCIdentityProvider implements Socia
                 user.setEmail(email);
             user.setIdp(this);
 
-            AbstractJsonUserAttributeMapper.storeUserProfileForMapper(user, profile, this.config.getAlias());
+            AbstractJsonUserAttributeMapper.storeUserProfileForMapper(user, profile, getConfig().getAlias());
             return user;
         } catch (Exception e) {
             throw new IdentityBrokerException("Could not obtain user profile from Druid Graph", e);
@@ -164,24 +163,24 @@ public class DruidIdentityProvider extends OIDCIdentityProvider implements Socia
         return uriBuilder;
     }
 
-    protected class OIDCEndpoint extends OIDCIdentityProvider.OIDCEndpoint {
-        public OIDCEndpoint(AuthenticationCallback callback, RealmModel realm, EventBuilder event) {
-            super(callback, realm, event, DruidIdentityProvider.this);
-        }
+    // protected class OIDCEndpoint extends OIDCIdentityProvider.OIDCEndpoint {
+    //     public OIDCEndpoint(AuthenticationCallback callback, RealmModel realm, EventBuilder event) {
+    //         super(callback, realm, event, DruidIdentityProvider.this);
+    //     }
 
-        @POST
-        @Override
-        public Response authResponse(
-                @FormParam(AbstractOAuth2IdentityProvider.OAUTH2_PARAMETER_STATE) String state,
-                @FormParam(AbstractOAuth2IdentityProvider.OAUTH2_PARAMETER_CODE) String authorizationCode,
-                @FormParam("user") String userJson,
-                @FormParam(OAuth2Constants.ERROR) String error) {
-            //
-            logger.infof("authResponse state: %s | userJson %s", state, userJson);
-            DruidIdentityProvider.this.userJson = userJson;
-            return super.authResponse(state, authorizationCode, error, error);
-        }
-    }
+    //     @POST
+    //     @Override
+    //     public Response authResponse(
+    //             @FormParam(AbstractOAuth2IdentityProvider.OAUTH2_PARAMETER_STATE) String state,
+    //             @FormParam(AbstractOAuth2IdentityProvider.OAUTH2_PARAMETER_CODE) String authorizationCode,
+    //             @FormParam("user") String userJson,
+    //             @FormParam(OAuth2Constants.ERROR) String error) {
+    //         //
+    //         logger.infof("authResponse state: %s | userJson %s", state, userJson);
+    //         DruidIdentityProvider.this.userJson = userJson;
+    //         return super.authResponse(state, authorizationCode, error, error);
+    //     }
+    // }
 
 
 
