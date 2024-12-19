@@ -13,7 +13,7 @@ public class Config {
     static {
         Properties properties = new Properties();
         //String env = System.getProperty("env", "prod"); // default to prod if env is not set
-        String env = System.getenv("env");
+        String env = System.getProperty("env", "prod");
         System.out.println("Config Env: " + env);
         String configFileName = "config-" + env + ".properties";
         //

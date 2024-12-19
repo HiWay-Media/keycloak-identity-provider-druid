@@ -37,7 +37,10 @@ task jarDev(type: Jar) {
     doFirst {
         println "CallingStatic dev"
         // Set environment variable in the task
-        System.setProperty('env', 'dev') // Default to 'dev' if not specified
+        //System.setProperty('env', 'dev') // Default to 'dev' if not specified
+        systemProperties = [
+            'env': 'dev'
+        ]
     }
 }
 
@@ -52,7 +55,10 @@ task jarProd(type: Jar) {
     doFirst {
         println "CallingStatic prod"
         // Set environment variable in the task
-        System.setProperty('env', 'prod') // Default to 'prod' if not specified
+        //System.setProperty('env', 'prod') // Default to 'prod' if not specified
+        systemProperties = [
+            'env': 'prod'
+        ]
     }
 }
 
