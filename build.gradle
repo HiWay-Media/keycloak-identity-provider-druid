@@ -32,7 +32,8 @@ task jarDev(type: Jar) {
     from sourceSets.main.output
     // Include the development properties file
     from('config-dev.properties') {
-        into('config.properties')
+        rename { 'config.properties' } // Ensures it's named correctly upon inclusion
+        into('config')
     }
 }
 
@@ -42,7 +43,8 @@ task jarProd(type: Jar) {
     from sourceSets.main.output
     // Include the production properties file
     from('config-prod.properties') {
-        into('config.properties')
+        rename { 'config.properties' } // Ensures it's named correctly upon inclusion
+        into('config')
     }
 }
 

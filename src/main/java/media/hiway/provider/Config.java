@@ -12,7 +12,7 @@ public class Config {
     //
     static {
         Properties properties = new Properties();
-        String configFileName = "config.properties";
+        String configFileName = "config/config.properties";
         //
         try (InputStream input = Config.class.getClassLoader().getResourceAsStream(configFileName)) {
             if (input == null) {
