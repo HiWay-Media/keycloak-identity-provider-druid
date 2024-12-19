@@ -184,16 +184,4 @@ public class DruidIdentityProvider extends AbstractOAuth2IdentityProvider<DruidI
     // }
 
 
-
-    @JsonIgnoreProperties(ignoreUnknown = true)
-    private static class User {
-        public String email;
-        public Name name;
-
-        @JsonIgnoreProperties(ignoreUnknown = true)
-        private static class Name {
-            public String firstName;
-            public String lastName;
-        }
-    }
 }
