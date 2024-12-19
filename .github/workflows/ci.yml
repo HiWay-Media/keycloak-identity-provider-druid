@@ -25,6 +25,7 @@ jobs:
           arguments: |
             jar
             -Penv=dev
+            keycloak-identity-provider-druid-dev.jar
              
       - name: Build JAR archive prod
         uses: gradle/gradle-build-action@67421db6bd0bf253fb4bd25b31ebb98943c375e1
@@ -32,6 +33,7 @@ jobs:
           arguments: |
             jar
             -Penv=prod
+            keycloak-identity-provider-druid-prod.jar
 
       - uses: actions/upload-artifact@v3
         with:
