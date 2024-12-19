@@ -9,6 +9,7 @@ import org.keycloak.broker.provider.IdentityBrokerException;
 import org.keycloak.broker.provider.util.SimpleHttp;
 import org.keycloak.broker.social.SocialIdentityProvider;
 import org.keycloak.events.EventBuilder;
+import org.keycloak.models.IdentityProviderModel;
 import org.keycloak.models.KeycloakSession;
 import org.keycloak.services.validation.Validation;
 
@@ -115,8 +116,13 @@ public class DruidIdentityProvider extends AbstractOAuth2IdentityProvider<DruidI
         String id = getJsonProperty(profile, "sub");
         logger.infof("extractIdentityFromProfile before id: %s", id);
         try {
-            logger.infof("extractIdentityFromProfile config ", getConfig());
-            BrokeredIdentityContext user = new BrokeredIdentityContext(id, getConfig());
+            DruidIdentityProviderConfig config = (DruidIdentityProviderConfig) getConfig();
+            logger.infof("extractIdentityFromProfile config ", config);
+            if (config == null) {
+                config = new DruidIdentityProviderConfig(new IdentityProviderModel());
+                logger.infof("extractIdentityFromProfile config after", config);
+            }
+            BrokeredIdentityContext user = new BrokeredIdentityContext(id, config);
             logger.infof("extractIdentityFromProfile user: %s", user);
             String email = getJsonProperty(profile, "email");
             if (email == null && profile.has("userPrincipalName")) {
@@ -132,7 +138,7 @@ public class DruidIdentityProvider extends AbstractOAuth2IdentityProvider<DruidI
                 user.setEmail(email);
             user.setIdp(this);
 
-            AbstractJsonUserAttributeMapper.storeUserProfileForMapper(user, profile, getConfig().getAlias());
+            AbstractJsonUserAttributeMapper.storeUserProfileForMapper(user, profile, config.getAlias());
             return user;
         } catch (Exception e) {
             throw new IdentityBrokerException("Could not obtain user profile from Druid Graph", e);
