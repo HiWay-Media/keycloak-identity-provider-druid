@@ -12,7 +12,8 @@ public class Config {
     //
     static {
         Properties properties = new Properties();
-        String env = System.getProperty("env", "prod"); // default to dev if env is not set
+        //String env = System.getProperty("env", "prod"); // default to prod if env is not set
+        String env = System.getenv("env");
         System.out.println("Config Env: " + env);
         String configFileName = "config-" + env + ".properties";
         //
