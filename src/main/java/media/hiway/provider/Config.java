@@ -13,7 +13,7 @@ public class Config {
     static {
         Properties properties = new Properties();
         String env = System.getProperty("env", "prod"); // default to dev if env is not set
-        System.out.println("Env: " + env);
+        System.out.println("Config Env: " + env);
         String configFileName = "config-" + env + ".properties";
         //
         try (InputStream input = Config.class.getClassLoader().getResourceAsStream(configFileName)) {
