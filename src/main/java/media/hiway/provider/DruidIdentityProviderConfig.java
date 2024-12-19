@@ -1,9 +1,9 @@
 package media.hiway.provider;
 
-import org.keycloak.broker.oidc.OIDCIdentityProviderConfig;
+import org.keycloak.broker.oidc.OAuth2IdentityProviderConfig;
 import org.keycloak.models.IdentityProviderModel;
 
-class DruidIdentityProviderConfig extends OIDCIdentityProviderConfig {
+class DruidIdentityProviderConfig extends OAuth2IdentityProviderConfig {
     DruidIdentityProviderConfig() {}
 
     DruidIdentityProviderConfig(IdentityProviderModel identityProviderModel) {
@@ -13,6 +13,7 @@ class DruidIdentityProviderConfig extends OIDCIdentityProviderConfig {
     private static final String DISPLAY_ICON_CLASSES = "fa fa-dragon";
     private static final String DISPLAY_NAME = "displayName";
     private static final String DEFAULT_DISPLAY_NAME = "Sign in with Druid";
+    
     //
      public String getProd() {
         return getConfig().get(PROD_ENV);
