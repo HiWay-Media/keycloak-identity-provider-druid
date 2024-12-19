@@ -56,9 +56,9 @@ task buildProd {
 }
 
 // Default build task
-//build {
-//    dependsOn buildProd // Change to buildProd for production by default if needed
-//}
+build {
+    dependsOn buildProd // Change to buildProd for production by default if needed
+}
 
 test {
     useJUnitPlatform()
