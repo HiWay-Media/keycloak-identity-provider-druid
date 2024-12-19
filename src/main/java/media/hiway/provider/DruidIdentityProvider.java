@@ -38,8 +38,10 @@ public class DruidIdentityProvider extends AbstractOAuth2IdentityProvider<DruidI
 
     public DruidIdentityProvider(KeycloakSession session, DruidIdentityProviderConfig config) {
         super(session, config);
-        String defaultScope = config.getDefaultScope();
+        logger.infof("DruidIdentityProvider config: %v, session: %v ", config, session);
+        //String defaultScope = config.getDefaultScope();
         String isProd = config.getProd();
+        //this.config = config;
         logger.infof("isProd ", isProd);
         // this.config = config;
         // logger.infof("config ", config);
@@ -47,7 +49,7 @@ public class DruidIdentityProvider extends AbstractOAuth2IdentityProvider<DruidI
         config.setAuthorizationUrl(AUTH_URL_TEST);
         config.setTokenUrl(TOKEN_URL_TEST);
         config.setUserInfoUrl(PROFILE_URL);
-        
+        config.setDefaultScope("");
         // check if inside the config exist openid likes scope=openid+email+name, if yes remove it 
         // if (defaultScope.contains(SCOPE_OPENID)) {
         //     config.setDefaultScope("");
@@ -74,7 +76,6 @@ public class DruidIdentityProvider extends AbstractOAuth2IdentityProvider<DruidI
     @Override
     public BrokeredIdentityContext getFederatedIdentity(String response) {
         logger.infof("getFederatedIdentity before response: %s", response);
-
         // parse the response string into json
         ObjectMapper mapper = new ObjectMapper();
         JsonNode jsonResponse;
@@ -153,8 +154,8 @@ public class DruidIdentityProvider extends AbstractOAuth2IdentityProvider<DruidI
     @Override
     protected UriBuilder createAuthorizationUrl(AuthenticationRequest request) {
         UriBuilder uriBuilder = super.createAuthorizationUrl(request);
-
         final DruidIdentityProviderConfig config = (DruidIdentityProviderConfig) getConfig();
+        logger.infof("createAuthorizationUrl config: %s", config);
         //
         uriBuilder.queryParam(OAUTH2_PARAMETER_STATE, request.getState().getEncoded())
             .queryParam(OAUTH2_PARAMETER_RESPONSE_TYPE, "code")
