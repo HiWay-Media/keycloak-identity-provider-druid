@@ -22,29 +22,18 @@ import jakarta.ws.rs.core.UriBuilder;
 public class DruidIdentityProvider extends AbstractOAuth2IdentityProvider<DruidIdentityProviderConfig> implements SocialIdentityProvider<DruidIdentityProviderConfig> {
     
     private static final Logger logger              = Logger.getLogger(DruidIdentityProvider.class);
-    // private static final String AUTH_URL            = "https://auth.id.sevillafc.es/oauth2/authorize";
-    // private static final String TOKEN_URL           = "https://auth.id.sevillafc.es/oauth2/token";
-    // private static final String JWKS_URL            = "https://auth.id.sevillafc.es/oauth2/keys";
-    // private static final String ISSUER              = "https://auth.id.sevillafc.es";
-    //
-    private static final String AUTH_URL_TEST       = "https://auth.test.id.sevillafc.es/oauth2/authorize";
-    private static final String TOKEN_URL_TEST      = "https://auth.test.id.sevillafc.es/oauth2/token";
-    private static final String PROFILE_URL         = "https://graph.test.id.sevillafc.es/activityid/v1/user/userinfo";
-    // private static final String JWKS_URL_TEST       = "https://auth.test.id.sevillafc.es/oauth2/keys";
-    // private static final String ISSUER_TEST         = "https://auth.test.id.sevillafc.es";
 
     public DruidIdentityProvider(KeycloakSession session, DruidIdentityProviderConfig config) {
         super(session, config);
-        
-        config.setAuthorizationUrl(AUTH_URL_TEST);
-        config.setTokenUrl(TOKEN_URL_TEST);
-        config.setUserInfoUrl(PROFILE_URL);
+        config.setAuthorizationUrl(Config.AUTH_URL);
+        config.setTokenUrl(Config.TOKEN_URL);
+        config.setUserInfoUrl(Config.PROFILE_URL);
         config.setDefaultScope("");
     }
 
     @Override
     protected String getProfileEndpointForValidation(EventBuilder event) {
-        return PROFILE_URL;
+        return Config.PROFILE_URL;
     }
 
 
@@ -79,7 +68,7 @@ public class DruidIdentityProvider extends AbstractOAuth2IdentityProvider<DruidI
         logger.infof("doGetFederatedIdentity before accessToken: %s", accessToken);
         try {
             logger.infof("doGetFederatedIdentity before SimpleHttp.doGet", "Authorization Bearer " + accessToken);
-            JsonNode profile = SimpleHttp.doGet(PROFILE_URL, session).header("Authorization", "Bearer " + accessToken).asJson();
+            JsonNode profile = SimpleHttp.doGet(Config.PROFILE_URL, session).header("Authorization", "Bearer " + accessToken).asJson();
             logger.infof("doGetFederatedIdentity JsonNode profile response: %s", profile);
             if (profile.has("error") && !profile.get("error").isNull()) {
                 throw new IdentityBrokerException("Error in Druid Graph API response. Payload: " + profile.toString());
