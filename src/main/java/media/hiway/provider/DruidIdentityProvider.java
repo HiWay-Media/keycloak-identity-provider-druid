@@ -114,8 +114,12 @@ public class DruidIdentityProvider extends AbstractOAuth2IdentityProvider<OIDCId
         String id = getJsonProperty(profile, "sub");
         logger.infof("extractIdentityFromProfile before id: %s", id);
         try {
-            final DruidIdentityProviderConfig config = (DruidIdentityProviderConfig) getConfig();
+            DruidIdentityProviderConfig config = (DruidIdentityProviderConfig) getConfig();
             logger.infof("extractIdentityFromProfile config ", config);
+            if (config == null) {
+                config = new DruidIdentityProviderConfig();
+            }
+            logger.infof("extractIdentityFromProfile after config ", config);
             BrokeredIdentityContext user = new BrokeredIdentityContext(id, config);
             logger.infof("extractIdentityFromProfile user: %s", user);
             String email = getJsonProperty(profile, "email");
