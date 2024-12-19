@@ -41,14 +41,14 @@ public class DruidIdentityProvider extends AbstractOAuth2IdentityProvider<OIDCId
     // private static final String ISSUER_TEST         = "https://auth.test.id.sevillafc.es";
     static final String DRUID_AUTHZ_CODE            = "druid-authz-code";
     //
-    private final DruidIdentityProviderConfig config;
+    //private final DruidIdentityProviderConfig config;
 
     public DruidIdentityProvider(KeycloakSession session, DruidIdentityProviderConfig config) {
         super(session, config);
-        logger.infof("DruidIdentityProvider config ", config);
+        logger.infof("DruidIdentityProvider config: %v, session: %v ", config, session);
         //String defaultScope = config.getDefaultScope();
         String isProd = config.getProd();
-        this.config = config;
+        //this.config = config;
         logger.infof("isProd ", isProd);
         //
         config.setAuthorizationUrl(AUTH_URL_TEST);
@@ -75,7 +75,6 @@ public class DruidIdentityProvider extends AbstractOAuth2IdentityProvider<OIDCId
     @Override
     public BrokeredIdentityContext getFederatedIdentity(String response) {
         logger.infof("getFederatedIdentity before response: %s", response);
-
         // parse the response string into json
         ObjectMapper mapper = new ObjectMapper();
         JsonNode jsonResponse;
@@ -115,8 +114,9 @@ public class DruidIdentityProvider extends AbstractOAuth2IdentityProvider<OIDCId
         String id = getJsonProperty(profile, "sub");
         logger.infof("extractIdentityFromProfile before id: %s", id);
         try {
-            logger.infof("extractIdentityFromProfile config ", this.config);
-            BrokeredIdentityContext user = new BrokeredIdentityContext(id, this.config);
+            final DruidIdentityProviderConfig config = (DruidIdentityProviderConfig) getConfig();
+            logger.infof("extractIdentityFromProfile config ", config);
+            BrokeredIdentityContext user = new BrokeredIdentityContext(id, config);
             logger.infof("extractIdentityFromProfile user: %s", user);
             String email = getJsonProperty(profile, "email");
             if (email == null && profile.has("userPrincipalName")) {
@@ -132,7 +132,7 @@ public class DruidIdentityProvider extends AbstractOAuth2IdentityProvider<OIDCId
                 user.setEmail(email);
             user.setIdp(this);
 
-            AbstractJsonUserAttributeMapper.storeUserProfileForMapper(user, profile, this.config.getAlias());
+            AbstractJsonUserAttributeMapper.storeUserProfileForMapper(user, profile, config.getAlias());
             return user;
         } catch (Exception e) {
             throw new IdentityBrokerException("Could not obtain user profile from Druid Graph", e);
@@ -154,8 +154,8 @@ public class DruidIdentityProvider extends AbstractOAuth2IdentityProvider<OIDCId
     @Override
     protected UriBuilder createAuthorizationUrl(AuthenticationRequest request) {
         UriBuilder uriBuilder = super.createAuthorizationUrl(request);
-
         final DruidIdentityProviderConfig config = (DruidIdentityProviderConfig) getConfig();
+        logger.infof("createAuthorizationUrl config: %s", config);
         //
         uriBuilder.queryParam(OAUTH2_PARAMETER_STATE, request.getState().getEncoded())
             .queryParam(OAUTH2_PARAMETER_RESPONSE_TYPE, "code")
