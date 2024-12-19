@@ -25,6 +25,7 @@ dependencies {
     testImplementation 'org.junit.jupiter:junit-jupiter:5.9.0'
 }
 
+ext.env_dev='dev'
 // Define tasks to create JARs with custom names based on the environment
 task jarDev(type: Jar) {
     archiveBaseName.set('druid-social-identity-provider-dev')
@@ -34,16 +35,11 @@ task jarDev(type: Jar) {
     from('src/main/resources/config-dev.properties') {
         into('config')
     }
-    doFirst {
-        println "CallingStatic dev"
-        // Set environment variable in the task
-        //System.setProperty('env', 'dev') // Default to 'dev' if not specified
-        systemProperties = [
-            'env': 'dev'
-        ]
-    }
+    systemProperty 'env', System.properties['env'] ?: "${env_dev}"
+    println "# dev environment: " + systemProperties['env']
 }
 
+ext.env_prod='prod'
 task jarProd(type: Jar) {
     archiveBaseName.set('druid-social-identity-provider-prod')
     archiveVersion.set(version)
@@ -52,14 +48,8 @@ task jarProd(type: Jar) {
     from('src/main/resources/config-prod.properties') {
         into('config')
     }
-    doFirst {
-        println "CallingStatic prod"
-        // Set environment variable in the task
-        //System.setProperty('env', 'prod') // Default to 'prod' if not specified
-        systemProperties = [
-            'env': 'prod'
-        ]
-    }
+    systemProperty 'env', System.properties['env'] ?: "${env_dev}"
+    println "# dev environment: " + systemProperties['env']
 }
 
 // Define build task to depend on specific jar task based on the environment
