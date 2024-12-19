@@ -35,10 +35,7 @@ task jarDev(type: Jar) {
         into('config')
     }
     // Set environment variable in the task
-    doFirst {
-        environment 'ENV', 'dev'
-        environment 'env', 'dev'
-    }
+    System.getProperty('env', 'dev') // Default to 'prod' if not specified
 }
 
 task jarProd(type: Jar) {
@@ -50,10 +47,7 @@ task jarProd(type: Jar) {
         into('config')
     }
     // Set environment variable in the task
-    doFirst {
-        environment 'ENV', 'prod'
-        environment 'env', 'prod'
-    }
+    System.getProperty('env', 'prod') // Default to 'prod' if not specified
 }
 
 // Define build task to depend on specific jar task based on the environment
