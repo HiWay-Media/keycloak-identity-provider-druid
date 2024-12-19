@@ -34,9 +34,12 @@ task jarDev(type: Jar) {
     from('src/main/resources/config-dev.properties') {
         into('config')
     }
-    // Set environment variable in the task
-    System.setProperty('env', 'dev') // Default to 'prod' if not specified
-    System.out.println("jarDev Env: " + env);
+    doFirst
+    {
+        println "CallingStatic dev"
+        // Set environment variable in the task
+        System.setProperty('env', 'dev') // Default to 'dev' if not specified
+    }
 }
 
 task jarProd(type: Jar) {
@@ -47,9 +50,12 @@ task jarProd(type: Jar) {
     from('src/main/resources/config-prod.properties') {
         into('config')
     }
-    // Set environment variable in the task
-    System.setProperty('env', 'prod') // Default to 'prod' if not specified
-    System.out.println("jarProd Env: " + env);
+    doFirst
+    {
+        println "CallingStatic prod"
+        // Set environment variable in the task
+        System.setProperty('env', 'prod') // Default to 'prod' if not specified
+    }
 }
 
 // Define build task to depend on specific jar task based on the environment
