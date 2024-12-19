@@ -25,7 +25,7 @@ public class DruidIdentityProvider extends AbstractOAuth2IdentityProvider<DruidI
 
     public DruidIdentityProvider(KeycloakSession session, DruidIdentityProviderConfig config) {
         super(session, config);
-        logger.infof("DruidIdentityProvider Config.AUTH_URL: %s | Config.TOKEN_URL: %sß", Config.AUTH_URL, Config.TOKEN_URL)
+        logger.infof("DruidIdentityProvider Config.AUTH_URL: %s | Config.TOKEN_URL: %sß", Config.AUTH_URL, Config.TOKEN_URL);
         config.setAuthorizationUrl(Config.AUTH_URL);
         config.setTokenUrl(Config.TOKEN_URL);
         config.setUserInfoUrl(Config.PROFILE_URL);
