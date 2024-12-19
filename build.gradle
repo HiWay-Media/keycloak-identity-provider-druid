@@ -2,11 +2,11 @@ plugins {
     id 'java'
     id 'maven-publish'
 }
-
+//
 group 'media.hiway'
-version '1.13.0'
+version 'v1.1.0'
 java.sourceCompatibility = JavaVersion.VERSION_11
-
+//
 ext {
     keycloakVersion = '25.0.0'
 }
