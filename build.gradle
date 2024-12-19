@@ -27,6 +27,9 @@ dependencies {
 
 // Define tasks to create JARs with custom names based on the environment
 task jarDev(type: Jar) {
+    archiveBaseName.set('druid-social-identity-provider-dev')
+    archiveVersion.set(version)
+    from sourceSets.main.output
     // Include the development properties file
     from('src/main/resources/config-dev.properties') {
         into('config')
@@ -34,6 +37,9 @@ task jarDev(type: Jar) {
 }
 
 task jarProd(type: Jar) {
+    archiveBaseName.set('druid-social-identity-provider-prod')
+    archiveVersion.set(version)
+    from sourceSets.main.output
     // Include the production properties file
     from('src/main/resources/config-prod.properties') {
         into('config')
