@@ -9,11 +9,9 @@ import org.keycloak.broker.provider.IdentityBrokerException;
 import org.keycloak.broker.provider.util.SimpleHttp;
 import org.keycloak.broker.social.SocialIdentityProvider;
 import org.keycloak.events.EventBuilder;
-import org.keycloak.models.IdentityProviderModel;
 import org.keycloak.models.KeycloakSession;
 import org.keycloak.services.validation.Validation;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
@@ -127,9 +125,17 @@ public class DruidIdentityProvider extends AbstractOAuth2IdentityProvider<DruidI
         UriBuilder uriBuilder = super.createAuthorizationUrl(request);
         final DruidIdentityProviderConfig config = (DruidIdentityProviderConfig) getConfig();
         logger.infof("createAuthorizationUrl config: %s", config);
-        //
+        
+        // debug logger
+        logger.infof("request x_method: %s", request.getHttpRequest().getDecodedFormParameters().get("x_method"));
+        logger.infof("request scope %s", request.getHttpRequest().getDecodedFormParameters().get("scope"));
+
         uriBuilder.queryParam(OAUTH2_PARAMETER_STATE, request.getState().getEncoded())
             .queryParam(OAUTH2_PARAMETER_RESPONSE_TYPE, "code")
+            // take x_method from the http request
+            .queryParam("x_method", request.getHttpRequest().getDecodedFormParameters().get("x_method"))
+            // take scope from the http request
+            .queryParam("scope", request.getHttpRequest().getDecodedFormParameters().get("scope"))
             .queryParam(OAUTH2_PARAMETER_CLIENT_ID, config.getClientId())
             .queryParam(OAUTH2_PARAMETER_REDIRECT_URI, request.getRedirectUri());
         return uriBuilder;
