@@ -29,8 +29,8 @@ This repository contains an extension for Keycloak to authenticate users through
 1. **Clone the Repository:**
 
    ```bash
-   git clone https://github.com/HiWay-Media/keycloak-identity-provider-drui.git
-   cd keycloak-identity-provider-drui
+   git clone https://github.com/HiWay-Media/keycloak-identity-provider-druid.git
+   cd keycloak-identity-provider-druid
    ```
 
 2. **Build the Project:**
@@ -48,7 +48,7 @@ This repository contains an extension for Keycloak to authenticate users through
    Copy the JAR file to the Keycloak deployments directory, typically `$KEYCLOAK_HOME/standalone/deployments/`.
 
    ```bash
-   cp target/keycloak-identity-provider-drui.jar $KEYCLOAK_HOME/standalone/deployments/
+   cp target/keycloak-identity-provider-druid.jar $KEYCLOAK_HOME/standalone/deployments/
    ```
 
 4. **Restart Keycloak:**
