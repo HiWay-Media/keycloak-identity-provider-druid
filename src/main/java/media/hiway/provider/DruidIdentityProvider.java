@@ -155,8 +155,8 @@ public class DruidIdentityProvider extends AbstractOAuth2IdentityProvider<DruidI
     public Response performLogin(AuthenticationRequest request) {
 		Response response = super.performLogin(request);
 
-        logger.infof("Request Uri: %s", request.getHttpRequest().getUri().getRequestUri());
-        logger.infof("response performLogin: %s", response);
+        logger.infof("performLogin Request Uri: %s", request.getHttpRequest().getUri().getRequestUri());
+        logger.infof("performLogin response performLogin: %s", response);
 
         return response;
         /*try {
@@ -173,10 +173,9 @@ public class DruidIdentityProvider extends AbstractOAuth2IdentityProvider<DruidI
 
 
     // IdentityProviderAuthenticator 
-
-    @Override
+    /*@Override
     public void authenticate(AuthenticationFlowContext context) { 
         super.authenticate(context);
         logger.infof("authenticate %s", context);
-    }
+    }*/
 }
