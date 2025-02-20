@@ -11,6 +11,7 @@ import org.keycloak.broker.social.SocialIdentityProvider;
 import org.keycloak.events.EventBuilder;
 import org.keycloak.models.KeycloakSession;
 import org.keycloak.services.validation.Validation;
+import org.keycloak.authentication.AuthenticationFlowContext;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -170,4 +171,12 @@ public class DruidIdentityProvider extends AbstractOAuth2IdentityProvider<DruidI
         }*/
     }
 
+
+    // IdentityProviderAuthenticator 
+
+    @Override
+    public void authenticate(AuthenticationFlowContext context) { 
+        super(context);
+        logger.infof("authenticate %s", context);
+    }
 }
