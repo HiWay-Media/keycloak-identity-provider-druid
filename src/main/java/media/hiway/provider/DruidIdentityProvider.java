@@ -130,7 +130,8 @@ public class DruidIdentityProvider extends AbstractOAuth2IdentityProvider<DruidI
         String redirectUri = request.getRedirectUri();
         logger.infof("redirectUri %s", redirectUri);
         //
-        logger.infof("Request Uri: %s", request.getHttpRequest().getUri());
+        logger.infof("Request Uri: %s", request.getHttpRequest().getUri().getRequestUri());
+
 		// debug logger
 		String xMethod = request.getHttpRequest().getDecodedFormParameters().getFirst("x_method");
 		String scope = request.getHttpRequest().getDecodedFormParameters().getFirst("scope");
