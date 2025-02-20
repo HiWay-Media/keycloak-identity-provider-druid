@@ -126,12 +126,12 @@ public class DruidIdentityProvider extends AbstractOAuth2IdentityProvider<DruidI
 		final DruidIdentityProviderConfig config = (DruidIdentityProviderConfig) getConfig();
 		logger.infof("createAuthorizationUrl config: %s", config);
 		logger.infof("createAuthorizationUrl request %s %s", request.getHttpRequest(), request.getHttpRequest());
-		logger.infof("request %v", request.getHttpRequest());
+		logger.info("request: {}", request.getHttpRequest());
         //logger.infof("getFormParameters %s %s", request.getHttpRequest().getFormParameters().getFirst("x_method") , request.getHttpRequest().getFormParameters().getFirst("x_method") );
         String redirectUri = request.getRedirectUri();
         logger.infof("redirectUri %s", redirectUri);
-        logger.infof("class httprequest ", request.getHttpRequest().getClass());
-
+        //
+        logger.info("Request Method: {}", request.getHttpRequest().getHttpMethod());
 		// debug logger
 		String xMethod = request.getHttpRequest().getDecodedFormParameters().getFirst("x_method");
 		String scope = request.getHttpRequest().getDecodedFormParameters().getFirst("scope");
