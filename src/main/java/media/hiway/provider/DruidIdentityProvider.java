@@ -176,7 +176,7 @@ public class DruidIdentityProvider extends AbstractOAuth2IdentityProvider<DruidI
 
     @Override
     public void authenticate(AuthenticationFlowContext context) { 
-        super(context);
+        super.authenticate(context);
         logger.infof("authenticate %s", context);
     }
 }
