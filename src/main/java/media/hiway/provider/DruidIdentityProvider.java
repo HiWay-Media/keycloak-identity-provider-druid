@@ -126,6 +126,7 @@ public class DruidIdentityProvider extends AbstractOAuth2IdentityProvider<DruidI
         final DruidIdentityProviderConfig config = (DruidIdentityProviderConfig) getConfig();
         logger.infof("createAuthorizationUrl config: %s", config);
         
+        logger.infof("request %v %s", request.getHttpRequest(), request.getHttpRequest());
         // debug logger
         logger.infof("request x_method: %s", request.getHttpRequest().getDecodedFormParameters().get("x_method"));
         logger.infof("request scope %s", request.getHttpRequest().getDecodedFormParameters().get("scope"));
@@ -133,9 +134,9 @@ public class DruidIdentityProvider extends AbstractOAuth2IdentityProvider<DruidI
         uriBuilder.queryParam(OAUTH2_PARAMETER_STATE, request.getState().getEncoded())
             .queryParam(OAUTH2_PARAMETER_RESPONSE_TYPE, "code")
             // take x_method from the http request
-            .queryParam("x_method", request.getHttpRequest().getDecodedFormParameters().get("x_method"))
+            //.queryParam("x_method", request.getHttpRequest().getDecodedFormParameters().get("x_method"))
             // take scope from the http request
-            .queryParam("scope", request.getHttpRequest().getDecodedFormParameters().get("scope"))
+            //.queryParam("scope", request.getHttpRequest().getDecodedFormParameters().get("scope"))
             .queryParam(OAUTH2_PARAMETER_CLIENT_ID, config.getClientId())
             .queryParam(OAUTH2_PARAMETER_REDIRECT_URI, request.getRedirectUri());
         return uriBuilder;
