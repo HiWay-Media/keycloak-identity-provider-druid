@@ -125,13 +125,15 @@ public class DruidIdentityProvider extends AbstractOAuth2IdentityProvider<DruidI
         UriBuilder uriBuilder = super.createAuthorizationUrl(request);
         final DruidIdentityProviderConfig config = (DruidIdentityProviderConfig) getConfig();
         logger.infof("createAuthorizationUrl config: %s", config);
-        logger.infof("createAuthorizationUrl request %v %s", request.getHttpRequest(), request.getHttpRequest());
+        logger.infof("createAuthorizationUrl request %s %s", request.getHttpRequest(), request.getHttpRequest());
+        logger.infof(request.getHttpRequest());
         // debug logger
         String xMethod = request.getHttpRequest().getDecodedFormParameters().getFirst("x_method");
         String scope = request.getHttpRequest().getDecodedFormParameters().getFirst("scope");
         logger.infof("request x_method: %s", xMethod);
         logger.infof("request scope %s", scope);
-        logger.infof("decoded ", request.getHttpRequest().getDecodedFormParameters());
+        logger.infof("decoded %s", request.getHttpRequest().getDecodedFormParameters());
+        logger.infof(request.getHttpRequest().getDecodedFormParameters());
 
         uriBuilder.queryParam(OAUTH2_PARAMETER_STATE, request.getState().getEncoded())
             .queryParam(OAUTH2_PARAMETER_RESPONSE_TYPE, "code")
