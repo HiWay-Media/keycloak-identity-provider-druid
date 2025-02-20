@@ -1,7 +1,6 @@
 package media.hiway.provider;
 
 import org.jboss.logging.Logger;
-import org.jboss.resteasy.spi.HttpRequest;
 import org.keycloak.broker.oidc.AbstractOAuth2IdentityProvider;
 import org.keycloak.broker.oidc.mappers.AbstractJsonUserAttributeMapper;
 import org.keycloak.broker.provider.AuthenticationRequest;
@@ -128,9 +127,9 @@ public class DruidIdentityProvider extends AbstractOAuth2IdentityProvider<DruidI
 		logger.infof("createAuthorizationUrl config: %s", config);
 		logger.infof("createAuthorizationUrl request %s %s", request.getHttpRequest(), request.getHttpRequest());
 		logger.infof("request %v", request.getHttpRequest());
-		HttpRequest httpRequest = (HttpRequest) request.getHttpRequest();
-        logger.infof("getFormParameters %s %s", httpRequest.getFormParameters(), httpRequest.getFormParameters().getFirst("x_method") );
+        logger.infof("getFormParameters %s %s", request.getHttpRequest().getFormParameters(), request.getHttpRequest().getFormParameters().getFirst("x_method") );
         String redirectUri = request.getRedirectUri();
+        logger.infof("redirectUri %s", redirectUri);
 
 		// debug logger
 		String xMethod = request.getHttpRequest().getDecodedFormParameters().getFirst("x_method");
