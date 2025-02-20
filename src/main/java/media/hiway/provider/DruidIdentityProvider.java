@@ -15,6 +15,7 @@ import org.keycloak.services.validation.Validation;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+import jakarta.ws.rs.core.Response;
 import jakarta.ws.rs.core.UriBuilder;
 
 public class DruidIdentityProvider extends AbstractOAuth2IdentityProvider<DruidIdentityProviderConfig>
@@ -148,5 +149,25 @@ public class DruidIdentityProvider extends AbstractOAuth2IdentityProvider<DruidI
 				.queryParam(OAUTH2_PARAMETER_REDIRECT_URI, redirectUri);
 		return uriBuilder;
 	}
+
+    @Override
+    public Response performLogin(AuthenticationRequest request) {
+		Response response = super.performLogin(request);
+
+        logger.infof("Request Uri: %s", request.getHttpRequest().getUri().getRequestUri());
+        logger.infof("response performLogin: %s", response);
+
+        return response;
+        /*try {
+            URI uri = new URI(request.getRedirectUri() + "?state=" + request.getState().getEncoded());
+            RequestToken requestToken = oAuthAuthorization.getOAuthRequestToken(uri.toString());
+            AuthenticationSessionModel authSession = request.getAuthenticationSession();
+            authSession.setAuthNote(TWITTER_TOKEN, Base64.encodeObject(requestToken));
+            URI authenticationUrl = URI.create(requestToken.getAuthenticationURL());
+            return Response.seeOther(authenticationUrl).build();
+        } catch (Exception e) {
+            throw new IdentityBrokerException("Could send authentication request to dru-id.", e);
+        }*/
+    }
 
 }
