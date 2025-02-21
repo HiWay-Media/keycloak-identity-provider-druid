@@ -134,6 +134,7 @@ public class DruidIdentityProvider extends AbstractOAuth2IdentityProvider<DruidI
         //
         logger.infof("Request Uri: %s", request.getHttpRequest().getUri().getRequestUri());
 
+        logger.infov("createAuthorizationUrl: uriBuilder = {}", uriBuilder);
 		// debug logger
 		String xMethod = request.getHttpRequest().getDecodedFormParameters().getFirst("x_method");
 		String scope = request.getHttpRequest().getDecodedFormParameters().getFirst("scope");
@@ -148,6 +149,7 @@ public class DruidIdentityProvider extends AbstractOAuth2IdentityProvider<DruidI
 				// .queryParam("scope", request.getHttpRequest().getDecodedFormParameters().get("scope"))
 				.queryParam(OAUTH2_PARAMETER_CLIENT_ID, config.getClientId())
 				.queryParam(OAUTH2_PARAMETER_REDIRECT_URI, redirectUri);
+
 		return uriBuilder;
 	}
 
@@ -157,6 +159,13 @@ public class DruidIdentityProvider extends AbstractOAuth2IdentityProvider<DruidI
 
         logger.infof("performLogin Request Uri: %s", request.getHttpRequest().getUri().getRequestUri());
         logger.infof("performLogin response performLogin: %s", response);
+		
+		// debug logger
+		String xMethod = request.getHttpRequest().getDecodedFormParameters().getFirst("x_method");
+		String scope = request.getHttpRequest().getDecodedFormParameters().getFirst("scope");
+		logger.infof("performLogin request x_method: %s", xMethod);
+		logger.infof("performLogin request scope %s", scope);
+
 
         return response;
         /*try {
