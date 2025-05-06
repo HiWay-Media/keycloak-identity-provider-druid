@@ -13,6 +13,7 @@ class DruidIdentityProviderConfig extends OAuth2IdentityProviderConfig {
     private static final String DISPLAY_ICON_CLASSES = "fa fa-dragon";
     private static final String DISPLAY_NAME = "displayName";
     private static final String DEFAULT_DISPLAY_NAME = "Sign in with Druid";
+    private static final String FRONTEND_ERROR_URL = "frontendErrorUrl";
     
     //
      public String getProd() {
@@ -40,5 +41,9 @@ class DruidIdentityProviderConfig extends OAuth2IdentityProviderConfig {
     @Override
     public String getDisplayIconClasses() {
         return DISPLAY_ICON_CLASSES;
+    }
+
+    public String getFrontendErrorUrl() {
+        return getConfig().get(FRONTEND_ERROR_URL);
     }
 }

@@ -1,14 +1,14 @@
 package media.hiway.provider;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.jboss.logging.Logger;
 import org.keycloak.broker.provider.AbstractIdentityProviderFactory;
 import org.keycloak.broker.social.SocialIdentityProviderFactory;
 import org.keycloak.models.IdentityProviderModel;
-import org.keycloak.provider.ProviderConfigProperty;
 import org.keycloak.models.KeycloakSession;
-import org.keycloak.provider.ProviderConfigurationBuilder;
-
-import java.util.List;
+import org.keycloak.provider.ProviderConfigProperty;
 
 public class DruidIdentityProviderFactory extends AbstractIdentityProviderFactory<DruidIdentityProvider> implements SocialIdentityProviderFactory<DruidIdentityProvider> {
     public static final String PROVIDER_ID = "druid";
@@ -39,11 +39,22 @@ public class DruidIdentityProviderFactory extends AbstractIdentityProviderFactor
     @Override
     public List<ProviderConfigProperty> getConfigProperties() {
         logger.infof("Creating DruidIdentityProviderConfig getConfigProperties()");
-        return ProviderConfigurationBuilder.create()
-                .property().name("displayName").label("Display name").helpText("Text that is shown on the login page. Defaults to 'Sign in with Druid'").type(ProviderConfigProperty.STRING_TYPE).add()
-                //.property().name("teamId").label("Team ID").helpText("Your 10-character Team ID obtained from your Druid developer account.").type(ProviderConfigProperty.STRING_TYPE).add()
-                //.property().name("keyId").label("Key ID").helpText("A 10-character key identifier obtained from your Druid developer account.").type(ProviderConfigProperty.STRING_TYPE).add()
-                .property().name("prodEnv").label("Is Prod").helpText("Is production environment.").type(ProviderConfigProperty.STRING_TYPE).add()
-                .build();
+        List<ProviderConfigProperty> configProperties = new ArrayList<>(super.getConfigProperties());
+
+        ProviderConfigProperty frontendErrorUrl = new ProviderConfigProperty();
+        frontendErrorUrl.setName("frontendErrorUrl");
+        frontendErrorUrl.setLabel("Frontend Error Redirect URL");
+        frontendErrorUrl.setHelpText("URL to redirect users to when Druid login fails or is cancelled.");
+        frontendErrorUrl.setType(ProviderConfigProperty.STRING_TYPE);
+        configProperties.add(frontendErrorUrl);
+
+        ProviderConfigProperty displayName = new ProviderConfigProperty();
+        displayName.setName("displayName");
+        displayName.setLabel("Display Name");
+        displayName.setHelpText("Text that is shown on the login page. Defaults to 'Sign in with Druid'");
+        displayName.setType(ProviderConfigProperty.STRING_TYPE);
+        configProperties.add(displayName);
+        
+        return configProperties;
     }
 }
