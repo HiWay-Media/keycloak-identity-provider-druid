@@ -107,7 +107,7 @@ public final class DruidIdentityProvider extends AbstractOAuth2IdentityProvider<
         logger.infof("extractIdentityFromProfile before id: %s", id);
         try {
             final DruidIdentityProviderConfig config = (DruidIdentityProviderConfig) getConfig();
-            logger.infof("extractIdentityFromProfile config %v, id %s", config, id);
+            logger.infof("extractIdentityFromProfile config %s, id %s", config, id);
             BrokeredIdentityContext user = new BrokeredIdentityContext(id);
             logger.infof("extractIdentityFromProfile user: %s", user);
             String email = getJsonProperty(profile, "email");
@@ -206,7 +206,7 @@ public final class DruidIdentityProvider extends AbstractOAuth2IdentityProvider<
                 logger.infof("error: %s", error);
                 if (error != null) {
                     logger.error(error + " for broker login " + providerConfig.getProviderId());
-                    logger.infof("error.equals('user_cancel') %v", error.equals("user_cancel"));
+                    logger.infof("error.equals('user_cancel') %s", error.equals("user_cancel"));
                     if (error.equals(ACCESS_DENIED)) {
                         logger.info("OAuthErrorException.AccessDenied");
                         return callback.cancelled(providerConfig);
