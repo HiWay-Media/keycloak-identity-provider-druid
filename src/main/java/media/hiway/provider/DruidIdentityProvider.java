@@ -196,9 +196,27 @@ public final class DruidIdentityProvider extends AbstractOAuth2IdentityProvider<
                 return errorIdentityProviderLogin(Messages.IDENTITY_PROVIDER_MISSING_STATE_ERROR);
             }
             logger.infof("state: %s", state);
+            AuthenticationSessionModel authSession;
             try {
-                logger.infof("state: %s", state);
-                AuthenticationSessionModel authSession = this.callback.getAndVerifyAuthenticationSession(state);
+                authSession = this.callback.getAndVerifyAuthenticationSession(state);
+            } catch (WebApplicationException e) {
+                // La sessione di login di Keycloak non c'e' piu': il browser torna da DruID senza i cookie
+                // di Keycloak (pagina DruID riaperta con il tasto indietro dopo un login gia' concluso,
+                // oppure login proseguito in un altro browser) o la sessione e' scaduta. Keycloak ha gia'
+                // registrato l'evento (cookie_not_found, expired_code...) e risponderebbe con una pagina
+                // d'errore senza uscita: si rimanda invece al sito, come per l'annullamento. Chi era gia'
+                // entrato ritrova il sito loggato; gli altri rifanno "Accedi" e DruID, con la sessione
+                // ancora attiva, li riporta indietro subito.
+                String frontendErrorUrl = provider.getConfig().getFrontendErrorUrl();
+                if (frontendErrorUrl != null && !frontendErrorUrl.isEmpty()) {
+                    logger.infof("authentication session not found, redirect to %s", frontendErrorUrl);
+                    return Response.status(Response.Status.FOUND)
+                            .location(UriBuilder.fromUri(frontendErrorUrl).build())
+                            .build();
+                }
+                return e.getResponse();
+            }
+            try {
                 session.getContext().setAuthenticationSession(authSession);
 
                 DruidIdentityProviderConfig providerConfig = provider.getConfig();
